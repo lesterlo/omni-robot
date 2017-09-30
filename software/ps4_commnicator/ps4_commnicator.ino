@@ -25,15 +25,15 @@ USB Usb;
 BTD Btd(&Usb);
 PS4BT PS4(&Btd);
 
-const int ps4_LeftHatX_deadHigh = 150;
-const int ps4_LeftHatX_deadLow = 100;
-const int ps4_LeftHatY_deadHigh = 150;
-const int ps4_LeftHatY_deadLow = 100;
+const int ps4_LeftHatX_deadHigh = 133;
+const int ps4_LeftHatX_deadLow = 125;
+const int ps4_LeftHatY_deadHigh = 133;
+const int ps4_LeftHatY_deadLow = 125;
 
-const int ps4_RightHatX_deadHigh = 137;
-const int ps4_RightHatX_deadLow = 117;
-const int ps4_RightHatY_deadHigh = 137;
-const int ps4_RightHatY_deadLow = 117;
+const int ps4_RightHatX_deadHigh = 133;
+const int ps4_RightHatX_deadLow = 125;
+const int ps4_RightHatY_deadHigh = 133;
+const int ps4_RightHatY_deadLow = 125;
 
 //Variable
 float hat_speed_multiply = 0.1;
@@ -103,15 +103,14 @@ void loop() {
     }
 
     if (PS4.getButtonClick(L1)){
-      if(hat_speed_multiply > 0.1)
-        hat_speed_multiply -=0.1;
+      outgoing_msg.cmd = 0x2;
     }
 
     if (PS4.getButtonClick(R1)){
-      if(hat_speed_multiply <= 0.7)
-        hat_speed_multiply +=0.1;
+        outgoing_msg.vx = 0x3;
     }
 
+    //Finally send command
     due_Serial.write(reinterpret_cast<char *>(&outgoing_msg), sizeof(Speed_cmd));
  
     //Disconnect
