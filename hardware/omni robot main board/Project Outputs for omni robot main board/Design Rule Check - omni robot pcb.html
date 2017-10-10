@@ -1,0 +1,502 @@
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html">
+<style type="text/css">
+		h1, h2, h3, h4, h5, h6 {
+			font-family : segoe ui;
+			color : black;
+			background-color : #EDE7D9;
+			padding: 0.3em;
+		}
+
+		h1 {
+			font-size: 1.2em;
+		}		
+
+		h2 {
+			font-size: 1.2em;
+		}
+
+		body {
+			font-family : segoe ui;
+		}
+
+		td, th {
+			padding: 0.5em;
+			text-align : left;
+			width: 10em;
+		}
+		th {
+			background-color : #EEEEEE;
+
+		}
+		th.column1, td.column1 {
+			text-align: left;
+			width : auto;
+		}
+		table {
+			width : 100%;
+			font-size: 0.9em;
+		}
+
+		.DRC_summary_header {
+			padding-bottom : 0.1em;
+			border : 0px solid black;
+			width: 100%;
+			align: left;
+		}
+
+		.DRC_summary_header_col1,
+		.DRC_summary_header_col2, 
+		.DRC_summary_header_col3 {
+			color : black;
+			font-size:100%;
+			padding : 0em;
+			padding-top : 0.2em;
+			padding-bottom 0.2em;
+			border : 0px solid black;
+			vertical-align: top;
+			text-align: left;
+		}
+
+		.DRC_summary_header_col1 {
+			font-weight: bold;
+			width: 8em;
+		}
+
+		.DRC_summary_header_col2 {
+			width: 0.1em;
+		
+		}
+
+		.DRC_summary_header_col3 {
+			width : auto;
+		}
+
+		.header_holder {
+		    Width = 100%;
+		    border = 0px solid green;
+		    padding = 0;
+		}
+
+
+		.front_matter, .front_matter_column1, .front_matter_column2, .front_matter_column3
+		{
+			left : 0;
+			top : 0;
+			padding: 0em;
+			padding-top : 0.1em;
+			border : 0px solid black;
+			width : 100%;
+			vertical-align: top;
+			text-align: left;
+		}
+
+		.front_matter_column1 {
+			width : 8em;
+			font-weight: bold;
+		}
+
+		.front_matter_column2 {
+			width: 0.1em;
+		}
+
+		.front_matter_column3 {
+			width : auto;
+		}
+
+		.total_column1, .total_column {
+			font-weight : bold;
+		}
+		.total_column1 {
+			text-align : left;
+		}
+		.warning, .error {
+			color : red;
+			font-weight : bold;
+		}
+		tr.onmouseout_odd {
+			background-color : #white;
+		}
+		tr.onmouseout_even { 
+			background-color : #FAFAFA;
+		}
+		tr.onmouseover_odd, tr.onmouseover_even { 
+			background-color : #EEEEEE;
+		} 
+		a:link, a:visited, .q a:link,.q a:active,.q {
+			color: #21489e; 
+		}
+		a:link.callback, a:visited.callback { 
+			color: #21489e;
+		}
+		a:link.customize, a:visited.customize {
+			color: #C0C0C0;
+			position: absolute; 
+			right: 10px;
+		}	
+		p.contents_level1 {
+			font-weight : bold;
+			font-size : 110%;
+			margin : 0.5em;
+		}
+		p.contents_level2 {
+			position : relative;
+			left : 20px;
+			margin : 0.5em;
+		}
+	</style><script type="text/javascript">
+		function coordToMils(coord) {
+			var number = coord / 10000;
+			
+			if (number != number.toFixed(3))
+				number = number.toFixed(3);
+
+			return number + 'mil'
+		}
+
+		function coordToMM(coord) {
+			var number = 0.0254 * coord / 10000;
+			
+			if (number != number.toFixed(4))
+				number = number.toFixed(4);
+			
+			return number + 'mm'
+		}
+	
+		function convertCoord(coordNode, units) {
+			for (var i = 0; i < coordNode.childNodes.length; i++) {
+				coordNode.removeChild(coordNode.childNodes[i]);
+			}
+
+			var coord = coordNode.getAttribute('value');
+			if (coord != null) {
+				if (units == 'mm') {
+					textNode = document.createTextNode(coordToMM(coord));
+					coordNode.appendChild(textNode);
+				} else if (units == 'mil') {
+					textNode = document.createTextNode(coordToMils(coord));		
+					coordNode.appendChild(textNode);	
+				}
+			}
+		}
+	
+		function convertUnits(unitNode, units) {
+			for (var i = 0; i < unitNode.childNodes.length; i++) {
+				unitNode.removeChild(unitNode.childNodes[i]);		
+			}
+		
+			textNode = document.createTextNode(units); 
+			unitNode.appendChild(textNode);
+		}
+	
+		function changeUnits(radio_input, units) {
+			if (radio_input.checked) {
+			
+				var elements = document.getElementsByName('coordinate');
+				if (elements) {
+					for (var i = 0; i < elements.length; i++) {
+						convertCoord(elements[i], units);
+					}
+				}
+	
+				var elements = document.getElementsByName('units');
+				if (elements) {
+					for (var i = 0; i < elements.length; i++) {
+						convertUnits(elements[i], units);
+					}
+				}
+			}
+		}
+	</script><title>Design Rule Verification Report</title>
+</head>
+<body onload=""><img ALT="Altium" src="
+			file://D:\Altium\Altium_doc\AD17\Templates\AD_logo.png
+		"><h1>Design Rule Verification Report</h1>
+<table class="header_holder">
+<td class="column1">
+<table class="front_matter">
+<tr class="front_matter">
+<td class="front_matter_column1">Date:</td>
+<td class="front_matter_column2"></td>
+<td class="front_matter_column3">10/10/2017</td>
+</tr>
+<tr class="front_matter">
+<td class="front_matter_column1">Time:</td>
+<td class="front_matter_column2"></td>
+<td class="front_matter_column3">5:07:33 PM</td>
+</tr>
+<tr class="front_matter">
+<td class="front_matter_column1">Elapsed Time:</td>
+<td class="front_matter_column2"></td>
+<td class="front_matter_column3">00:00:02</td>
+</tr>
+<tr class="front_matter">
+<td class="front_matter_column1">Filename:</td>
+<td class="front_matter_column2"></td>
+<td class="front_matter_column3"><a href="file:///E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc" class="file"><acronym title="E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc">E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc</acronym></a></td>
+</tr>
+</table>
+</td>
+<td class="column2">
+<table class="DRC_summary_header">
+<tr>
+<td class="DRC_summary_header_col1">Warnings:</td>
+<td class="DRC_summary_header_col2"></td>
+<td class="DRC_summary_header_col3">0</td></tr>
+<tr>
+<td class="DRC_summary_header_col1">Rule Violations:</td>
+<td class="DRC_summary_header_col2"></td>
+<td class="DRC_summary_header_col3" style="color : red">54</td></tr>
+</table>
+</td>
+</table><a name="IDOKRQLOFYUISCN222WITVTOAR5HP4DJIZQVAPXHLXJJW041A3BOH"><h2>Summary</h2></a><table>
+<tr>
+<th class="column1">Warnings</th>
+<th class="column2">Count</th>
+</tr>
+<tr>
+<td style="font-weight : bold; text-align : right" class="column1">Total</td>
+<td style="font-weight : bold" class="column2">0</td>
+</tr>
+</table><br><table>
+<tr>
+<th class="column1">Rule Violations</th>
+<th class="column2">Count</th>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="#IDN2QIJPGQ1WJTI0K0YDDRZ2PK1JRINZSQPJ1U4ENX0ETN44WBXSVM">Clearance Constraint (Gap=0.4mm) (All),(All)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="#IDX4TXYBYBUXMIITJ0XJOHR5DZZGPPVRLNUABEFLGG2B2BIFHNOIBC">Short-Circuit Constraint (Allowed=No) (All),(All)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="#IDGB0OCE1PNJLVPHWIJDMBXKCZJMG2HKQTTCHBGZIWCVIHEUJO0HKI">Un-Routed Net Constraint ( (All) )</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="#IDEN3OBAJOQKPZBVAWYW4QWXFKAEXAHZYR0DOY3DY2DKUW5IHIHJL">Modified Polygon (Allow modified: No), (Allow shelved: No)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="#IDSR4HX3COWV0QJH54CUB4MBFSTPRKD4EDGH5ZN3OCKLTXGH2OL3YI">Width Constraint (Min=0.4mm) (Max=0.7mm) (Preferred=0.5mm) (All)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="#IDHDKHFJJ40QF2GKWXBDZ2JKMQSPLKYCB54WKN3ZJNBBU1CAQS2XGM">Power Plane Connect Rule(Relief Connect )(Expansion=0.508mm) (Conductor Width=0.254mm) (Air Gap=0.254mm) (Entries=4) (All)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="#IDYZMX4RHEGQFSHT3TEKHQLPDZCEGO0KQSM32ZCKPKYP2G1TQCR0BC">Hole Size Constraint (Min=0.025mm) (Max=2.54mm) (All)</a></td>
+<td class="column2">6</td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="#IDNAE2MH01UHIADW0WKKGAZGFCOCPFQGWJQECOQWBOXUIBJTHVDBCM">Hole To Hole Clearance (Gap=0.254mm) (All),(All)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="#ID4MQ514C0QKGSIAOIGDAV2D42VHV2SYXOBAOIRUIICLT5RHJ4I25B">Minimum Solder Mask Sliver (Gap=0.254mm) (All),(All)</a></td>
+<td class="column2">2</td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="#IDAW4YAMYLTQVFYZWYAGI5BATJFSB4TU0KTKRUAHAU02PCHUDVJLI">Silk To Solder Mask (Clearance=0.254mm) (IsPad),(All)</a></td>
+<td class="column2">21</td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="#IDL2VRF1VCU5J0L4B0BLDULX3N4PHABALUJXUOTQDCWFQQ1IOQVKOC">Silk to Silk (Clearance=0.254mm) (All),(All)</a></td>
+<td class="column2">25</td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="#IDALCIN3ILLMUKDL0GKI2KD4QELEGQXMDV11U0MRHR11W112RHOA2B">Net Antennae (Tolerance=0mm) (All)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="#ID4UZDK5XT2X4XLBB0W2QRVK03NMVQTOBMZ10UHGK0C4WIONEATS2G">Height Constraint (Min=0mm) (Max=25.4mm) (Prefered=12.7mm) (All)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr>
+<td style="font-weight : bold; text-align : right" class="column1">Total</td>
+<td style="font-weight : bold" class="column2">54</td>
+</tr>
+</table><br><a name="IDYZMX4RHEGQFSHT3TEKHQLPDZCEGO0KQSM32ZCKPKYP2G1TQCR0BC"><table>
+<tr>
+<th style="text-align : left" colspan="1" class="rule">Hole Size Constraint (Min=0.025mm) (Max=2.54mm) (All)</th>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2980.32mil|Location2.X=3099.68mil|Location1.Y=3415.32mil|Location2.Y=3534.68mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2980.32mil|Location2.X=3099.68mil|Location1.Y=3415.32mil|Location2.Y=3534.68mil|Absolute=True">Hole Size Constraint: (3mm &gt; 2.54mm) Via (77.216mm,88.265mm) from Top Layer to Bottom Layer Actual Hole Size = 3mm</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=4880.32mil|Location2.X=4999.68mil|Location1.Y=3365.32mil|Location2.Y=3484.68mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=4880.32mil|Location2.X=4999.68mil|Location1.Y=3365.32mil|Location2.Y=3484.68mil|Absolute=True">Hole Size Constraint: (3mm &gt; 2.54mm) Via (125.476mm,86.995mm) from Top Layer to Bottom Layer Actual Hole Size = 3mm</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=4880.32mil|Location2.X=4999.68mil|Location1.Y=6615.32mil|Location2.Y=6734.68mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=4880.32mil|Location2.X=4999.68mil|Location1.Y=6615.32mil|Location2.Y=6734.68mil|Absolute=True">Hole Size Constraint: (3mm &gt; 2.54mm) Via (125.476mm,169.545mm) from Top Layer to Bottom Layer Actual Hole Size = 3mm</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=4680.32mil|Location2.X=4799.68mil|Location1.Y=5415.32mil|Location2.Y=5534.68mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=4680.32mil|Location2.X=4799.68mil|Location1.Y=5415.32mil|Location2.Y=5534.68mil|Absolute=True">Hole Size Constraint: (3mm &gt; 2.54mm) Via (120.396mm,139.065mm) from Top Layer to Bottom Layer Actual Hole Size = 3mm</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3580.32mil|Location2.X=3699.68mil|Location1.Y=5415.32mil|Location2.Y=5534.68mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3580.32mil|Location2.X=3699.68mil|Location1.Y=5415.32mil|Location2.Y=5534.68mil|Absolute=True">Hole Size Constraint: (3mm &gt; 2.54mm) Via (92.456mm,139.065mm) from Top Layer to Bottom Layer Actual Hole Size = 3mm</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2980.32mil|Location2.X=3099.68mil|Location1.Y=6365.32mil|Location2.Y=6484.68mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2980.32mil|Location2.X=3099.68mil|Location1.Y=6365.32mil|Location2.Y=6484.68mil|Absolute=True">Hole Size Constraint: (3mm &gt; 2.54mm) Via (77.216mm,163.195mm) from Top Layer to Bottom Layer Actual Hole Size = 3mm</acronym></a><br></td>
+</tr>
+</table></a><hr color="#EEEEEE"><a href="#top" style="font-size: 0.9em">Back to top</a><br><br><a name="ID4MQ514C0QKGSIAOIGDAV2D42VHV2SYXOBAOIRUIICLT5RHJ4I25B"><table>
+<tr>
+<th style="text-align : left" colspan="1" class="rule">Minimum Solder Mask Sliver (Gap=0.254mm) (All),(All)</th>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3794.51mil|Location2.X=3805.76mil|Location1.Y=4610.2mil|Location2.Y=4622.078mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3794.51mil|Location2.X=3805.76mil|Location1.Y=4610.2mil|Location2.Y=4622.078mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.229mm &lt; 0.254mm) Between Via (95.961mm,116.815mm) from Top Layer to Bottom Layer And Pad B2-11(97.282mm,117.856mm) on Multi-Layer [Top Solder] Mask Sliver [0.229mm] / [Bottom Solder] Mask Sliver [0.229mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=4972.087mil|Location2.X=4983.337mil|Location1.Y=4635.016mil|Location2.Y=4646.266mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=4972.087mil|Location2.X=4983.337mil|Location1.Y=4635.016mil|Location2.Y=4646.266mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.189mm &lt; 0.254mm) Between Via (127.127mm,117.805mm) from Top Layer to Bottom Layer And Pad B1-59(125.476mm,118.745mm) on Multi-Layer [Top Solder] Mask Sliver [0.189mm] / [Bottom Solder] Mask Sliver [0.189mm]</acronym></a><br></td>
+</tr>
+</table></a><hr color="#EEEEEE"><a href="#top" style="font-size: 0.9em">Back to top</a><br><br><a name="IDAW4YAMYLTQVFYZWYAGI5BATJFSB4TU0KTKRUAHAU02PCHUDVJLI"><table>
+<tr>
+<th style="text-align : left" colspan="1" class="rule">Silk To Solder Mask (Clearance=0.254mm) (IsPad),(All)</th>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2397.058mil|Location2.X=2408.308mil|Location1.Y=6739.375mil|Location2.Y=6750.625mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2397.058mil|Location2.X=2408.308mil|Location1.Y=6739.375mil|Location2.Y=6750.625mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.241mm &lt; 0.254mm) Between Track (60.579mm,171.323mm)(60.808mm,171.323mm) on Top Overlay And Pad R2-2(61.849mm,171.323mm) on Multi-Layer [Top Overlay] to [Top Solder] clearance [0.241mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2161.692mil|Location2.X=2172.942mil|Location1.Y=6739.375mil|Location2.Y=6750.625mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2161.692mil|Location2.X=2172.942mil|Location1.Y=6739.375mil|Location2.Y=6750.625mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.241mm &lt; 0.254mm) Between Track (55.27mm,171.323mm)(55.499mm,171.323mm) on Top Overlay And Pad R2-1(54.229mm,171.323mm) on Multi-Layer [Top Overlay] to [Top Solder] clearance [0.241mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2402.058mil|Location2.X=2413.308mil|Location1.Y=5666.297mil|Location2.Y=5677.547mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2402.058mil|Location2.X=2413.308mil|Location1.Y=5666.297mil|Location2.Y=5677.547mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.241mm &lt; 0.254mm) Between Track (60.706mm,144.067mm)(60.935mm,144.067mm) on Top Overlay And Pad R1-2(61.976mm,144.067mm) on Multi-Layer [Top Overlay] to [Top Solder] clearance [0.241mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2166.692mil|Location2.X=2177.942mil|Location1.Y=5666.297mil|Location2.Y=5677.547mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2166.692mil|Location2.X=2177.942mil|Location1.Y=5666.297mil|Location2.Y=5677.547mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.241mm &lt; 0.254mm) Between Track (55.397mm,144.067mm)(55.626mm,144.067mm) on Top Overlay And Pad R1-1(54.356mm,144.067mm) on Multi-Layer [Top Overlay] to [Top Solder] clearance [0.241mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=5264.375mil|Location2.X=5275.625mil|Location1.Y=3714.382mil|Location2.Y=3725.632mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=5264.375mil|Location2.X=5275.625mil|Location1.Y=3714.382mil|Location2.Y=3725.632mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.254mm &lt; 0.254mm) Between Track (132.588mm,94.742mm)(145.288mm,94.742mm) on Top Overlay And Pad B8-11(133.858mm,93.599mm) on Multi-Layer [Top Overlay] to [Top Solder] clearance [0.254mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=5259.375mil|Location2.X=5270.625mil|Location1.Y=4479.382mil|Location2.Y=4490.632mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=5259.375mil|Location2.X=5270.625mil|Location1.Y=4479.382mil|Location2.Y=4490.632mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.254mm &lt; 0.254mm) Between Track (132.461mm,114.173mm)(145.161mm,114.173mm) on Top Overlay And Pad B7-11(133.731mm,113.03mm) on Multi-Layer [Top Overlay] to [Top Solder] clearance [0.254mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=5259.375mil|Location2.X=5270.625mil|Location1.Y=5324.382mil|Location2.Y=5335.632mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=5259.375mil|Location2.X=5270.625mil|Location1.Y=5324.382mil|Location2.Y=5335.632mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.254mm &lt; 0.254mm) Between Track (132.461mm,135.636mm)(145.161mm,135.636mm) on Top Overlay And Pad B6-11(133.731mm,134.493mm) on Multi-Layer [Top Overlay] to [Top Solder] clearance [0.254mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3876.353mil|Location2.X=3887.603mil|Location1.Y=5374.887mil|Location2.Y=5386.137mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3876.353mil|Location2.X=3887.603mil|Location1.Y=5374.887mil|Location2.Y=5386.137mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.254mm &lt; 0.254mm) Between Track (98.856mm,135.395mm)(98.856mm,137.935mm) on Top Overlay And Pad B1-82(97.586mm,136.665mm) on Multi-Layer [Top Overlay] to [Top Solder] clearance [0.254mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3796.337mil|Location2.X=3807.587mil|Location1.Y=5374.887mil|Location2.Y=5386.137mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3796.337mil|Location2.X=3807.587mil|Location1.Y=5374.887mil|Location2.Y=5386.137mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.254mm &lt; 0.254mm) Between Track (96.316mm,136.03mm)(96.316mm,140.475mm) on Top Overlay And Pad B1-82(97.586mm,136.665mm) on Multi-Layer [Top Overlay] to [Top Solder] clearance [0.254mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3836.345mil|Location2.X=3847.595mil|Location1.Y=5414.895mil|Location2.Y=5426.145mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3836.345mil|Location2.X=3847.595mil|Location1.Y=5414.895mil|Location2.Y=5426.145mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.254mm &lt; 0.254mm) Between Track (96.316mm,137.935mm)(98.856mm,137.935mm) on Top Overlay And Pad B1-82(97.586mm,136.665mm) on Multi-Layer [Top Overlay] to [Top Solder] clearance [0.254mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3836.345mil|Location2.X=3847.595mil|Location1.Y=5334.879mil|Location2.Y=5346.129mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3836.345mil|Location2.X=3847.595mil|Location1.Y=5334.879mil|Location2.Y=5346.129mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.254mm &lt; 0.254mm) Between Track (96.951mm,135.395mm)(103.936mm,135.395mm) on Top Overlay And Pad B1-82(97.586mm,136.665mm) on Multi-Layer [Top Overlay] to [Top Solder] clearance [0.254mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3796.337mil|Location2.X=3807.587mil|Location1.Y=5474.887mil|Location2.Y=5486.137mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3796.337mil|Location2.X=3807.587mil|Location1.Y=5474.887mil|Location2.Y=5486.137mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.254mm &lt; 0.254mm) Between Track (96.316mm,136.03mm)(96.316mm,140.475mm) on Top Overlay And Pad B1-83(97.586mm,139.205mm) on Multi-Layer [Top Overlay] to [Top Solder] clearance [0.254mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3836.345mil|Location2.X=3847.595mil|Location1.Y=5434.879mil|Location2.Y=5446.129mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3836.345mil|Location2.X=3847.595mil|Location1.Y=5434.879mil|Location2.Y=5446.129mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.254mm &lt; 0.254mm) Between Track (96.316mm,137.935mm)(98.856mm,137.935mm) on Top Overlay And Pad B1-83(97.586mm,139.205mm) on Multi-Layer [Top Overlay] to [Top Solder] clearance [0.254mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3836.345mil|Location2.X=3847.595mil|Location1.Y=5514.895mil|Location2.Y=5526.145mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3836.345mil|Location2.X=3847.595mil|Location1.Y=5514.895mil|Location2.Y=5526.145mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.254mm &lt; 0.254mm) Between Track (96.316mm,140.475mm)(103.936mm,140.475mm) on Top Overlay And Pad B1-83(97.586mm,139.205mm) on Multi-Layer [Top Overlay] to [Top Solder] clearance [0.254mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3896.337mil|Location2.X=3907.587mil|Location1.Y=5374.887mil|Location2.Y=5386.137mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3896.337mil|Location2.X=3907.587mil|Location1.Y=5374.887mil|Location2.Y=5386.137mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.254mm &lt; 0.254mm) Between Track (98.856mm,135.395mm)(98.856mm,137.935mm) on Top Overlay And Pad B1-84(100.126mm,136.665mm) on Multi-Layer [Top Overlay] to [Top Solder] clearance [0.254mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3936.345mil|Location2.X=3947.595mil|Location1.Y=5334.879mil|Location2.Y=5346.129mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3936.345mil|Location2.X=3947.595mil|Location1.Y=5334.879mil|Location2.Y=5346.129mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.254mm &lt; 0.254mm) Between Track (96.951mm,135.395mm)(103.936mm,135.395mm) on Top Overlay And Pad B1-84(100.126mm,136.665mm) on Multi-Layer [Top Overlay] to [Top Solder] clearance [0.254mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3936.345mil|Location2.X=3947.595mil|Location1.Y=5514.895mil|Location2.Y=5526.145mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3936.345mil|Location2.X=3947.595mil|Location1.Y=5514.895mil|Location2.Y=5526.145mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.254mm &lt; 0.254mm) Between Track (96.316mm,140.475mm)(103.936mm,140.475mm) on Top Overlay And Pad B1-85(100.126mm,139.205mm) on Multi-Layer [Top Overlay] to [Top Solder] clearance [0.254mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=4076.353mil|Location2.X=4087.603mil|Location1.Y=5374.887mil|Location2.Y=5386.137mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=4076.353mil|Location2.X=4087.603mil|Location1.Y=5374.887mil|Location2.Y=5386.137mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.254mm &lt; 0.254mm) Between Track (103.936mm,135.395mm)(103.936mm,140.475mm) on Top Overlay And Pad B1-86(102.666mm,136.665mm) on Multi-Layer [Top Overlay] to [Top Solder] clearance [0.254mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=4036.345mil|Location2.X=4047.595mil|Location1.Y=5334.879mil|Location2.Y=5346.129mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=4036.345mil|Location2.X=4047.595mil|Location1.Y=5334.879mil|Location2.Y=5346.129mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.254mm &lt; 0.254mm) Between Track (96.951mm,135.395mm)(103.936mm,135.395mm) on Top Overlay And Pad B1-86(102.666mm,136.665mm) on Multi-Layer [Top Overlay] to [Top Solder] clearance [0.254mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=4076.353mil|Location2.X=4087.603mil|Location1.Y=5474.887mil|Location2.Y=5486.137mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=4076.353mil|Location2.X=4087.603mil|Location1.Y=5474.887mil|Location2.Y=5486.137mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.254mm &lt; 0.254mm) Between Track (103.936mm,135.395mm)(103.936mm,140.475mm) on Top Overlay And Pad B1-87(102.666mm,139.205mm) on Multi-Layer [Top Overlay] to [Top Solder] clearance [0.254mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=4036.345mil|Location2.X=4047.595mil|Location1.Y=5514.895mil|Location2.Y=5526.145mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=4036.345mil|Location2.X=4047.595mil|Location1.Y=5514.895mil|Location2.Y=5526.145mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.254mm &lt; 0.254mm) Between Track (96.316mm,140.475mm)(103.936mm,140.475mm) on Top Overlay And Pad B1-87(102.666mm,139.205mm) on Multi-Layer [Top Overlay] to [Top Solder] clearance [0.254mm]</acronym></a><br></td>
+</tr>
+</table></a><hr color="#EEEEEE"><a href="#top" style="font-size: 0.9em">Back to top</a><br><br><a name="IDL2VRF1VCU5J0L4B0BLDULX3N4PHABALUJXUOTQDCWFQQ1IOQVKOC"><table>
+<tr>
+<th style="text-align : left" colspan="1" class="rule">Silk to Silk (Clearance=0.254mm) (All),(All)</th>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2624.375mil|Location2.X=2635.625mil|Location1.Y=3131.068mil|Location2.Y=3142.318mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2624.375mil|Location2.X=2635.625mil|Location1.Y=3131.068mil|Location2.Y=3142.318mil|Absolute=True">Silk To Silk Clearance Constraint: (0.222mm &lt; 0.254mm) Between Text "2" (66.802mm,78.613mm) on Top Overlay And Track (65.024mm,79.883mm)(70.104mm,79.883mm) on Top Overlay Silk Text to Silk Clearance [0.222mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=4825.625mil|Location2.X=4836.875mil|Location1.Y=6369.375mil|Location2.Y=6380.625mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=4825.625mil|Location2.X=4836.875mil|Location1.Y=6369.375mil|Location2.Y=6380.625mil|Absolute=True">Silk To Silk Clearance Constraint: (0.191mm &lt; 0.254mm) Between Text "CANRX" (122.555mm,161.798mm) on Top Overlay And Track (122.936mm,161.925mm)(123.825mm,161.925mm) on Top Overlay Silk Text to Silk Clearance [0.191mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3147.594mil|Location2.X=3158.844mil|Location1.Y=6727.234mil|Location2.Y=6738.484mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3147.594mil|Location2.X=3158.844mil|Location1.Y=6727.234mil|Location2.Y=6738.484mil|Absolute=True">Silk To Silk Clearance Constraint: (0.145mm &lt; 0.254mm) Between Text "23" (80.391mm,171.45mm) on Top Overlay And Track (76.581mm,170.815mm)(121.666mm,170.815mm) on Top Overlay Silk Text to Silk Clearance [0.145mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3247.594mil|Location2.X=3258.844mil|Location1.Y=6727.234mil|Location2.Y=6738.484mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3247.594mil|Location2.X=3258.844mil|Location1.Y=6727.234mil|Location2.Y=6738.484mil|Absolute=True">Silk To Silk Clearance Constraint: (0.145mm &lt; 0.254mm) Between Text "25" (82.931mm,171.45mm) on Top Overlay And Track (76.581mm,170.815mm)(121.666mm,170.815mm) on Top Overlay Silk Text to Silk Clearance [0.145mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3547.594mil|Location2.X=3558.844mil|Location1.Y=6727.234mil|Location2.Y=6738.484mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3547.594mil|Location2.X=3558.844mil|Location1.Y=6727.234mil|Location2.Y=6738.484mil|Absolute=True">Silk To Silk Clearance Constraint: (0.145mm &lt; 0.254mm) Between Text "31" (90.551mm,171.45mm) on Top Overlay And Track (76.581mm,170.815mm)(121.666mm,170.815mm) on Top Overlay Silk Text to Silk Clearance [0.145mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3647.594mil|Location2.X=3658.844mil|Location1.Y=6727.234mil|Location2.Y=6738.484mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3647.594mil|Location2.X=3658.844mil|Location1.Y=6727.234mil|Location2.Y=6738.484mil|Absolute=True">Silk To Silk Clearance Constraint: (0.145mm &lt; 0.254mm) Between Text "33" (93.091mm,171.45mm) on Top Overlay And Track (76.581mm,170.815mm)(121.666mm,170.815mm) on Top Overlay Silk Text to Silk Clearance [0.145mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3947.594mil|Location2.X=3958.844mil|Location1.Y=6727.234mil|Location2.Y=6738.484mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3947.594mil|Location2.X=3958.844mil|Location1.Y=6727.234mil|Location2.Y=6738.484mil|Absolute=True">Silk To Silk Clearance Constraint: (0.145mm &lt; 0.254mm) Between Text "39" (100.711mm,171.45mm) on Top Overlay And Track (76.581mm,170.815mm)(121.666mm,170.815mm) on Top Overlay Silk Text to Silk Clearance [0.145mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3045.238mil|Location2.X=3056.488mil|Location1.Y=6726.056mil|Location2.Y=6737.306mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3045.238mil|Location2.X=3056.488mil|Location1.Y=6726.056mil|Location2.Y=6737.306mil|Absolute=True">Silk To Silk Clearance Constraint: (0.085mm &lt; 0.254mm) Between Text "5V" (77.851mm,171.45mm) on Top Overlay And Track (76.581mm,170.815mm)(121.666mm,170.815mm) on Top Overlay Silk Text to Silk Clearance [0.085mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3347.594mil|Location2.X=3358.844mil|Location1.Y=6727.234mil|Location2.Y=6738.484mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3347.594mil|Location2.X=3358.844mil|Location1.Y=6727.234mil|Location2.Y=6738.484mil|Absolute=True">Silk To Silk Clearance Constraint: (0.145mm &lt; 0.254mm) Between Text "27" (85.471mm,171.45mm) on Top Overlay And Track (76.581mm,170.815mm)(121.666mm,170.815mm) on Top Overlay Silk Text to Silk Clearance [0.145mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3447.594mil|Location2.X=3458.844mil|Location1.Y=6727.234mil|Location2.Y=6738.484mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3447.594mil|Location2.X=3458.844mil|Location1.Y=6727.234mil|Location2.Y=6738.484mil|Absolute=True">Silk To Silk Clearance Constraint: (0.145mm &lt; 0.254mm) Between Text "29" (88.011mm,171.45mm) on Top Overlay And Track (76.581mm,170.815mm)(121.666mm,170.815mm) on Top Overlay Silk Text to Silk Clearance [0.145mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3747.594mil|Location2.X=3758.844mil|Location1.Y=6727.234mil|Location2.Y=6738.484mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3747.594mil|Location2.X=3758.844mil|Location1.Y=6727.234mil|Location2.Y=6738.484mil|Absolute=True">Silk To Silk Clearance Constraint: (0.145mm &lt; 0.254mm) Between Text "35" (95.631mm,171.45mm) on Top Overlay And Track (76.581mm,170.815mm)(121.666mm,170.815mm) on Top Overlay Silk Text to Silk Clearance [0.145mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3847.594mil|Location2.X=3858.844mil|Location1.Y=6727.234mil|Location2.Y=6738.484mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3847.594mil|Location2.X=3858.844mil|Location1.Y=6727.234mil|Location2.Y=6738.484mil|Absolute=True">Silk To Silk Clearance Constraint: (0.145mm &lt; 0.254mm) Between Text "37" (98.171mm,171.45mm) on Top Overlay And Track (76.581mm,170.815mm)(121.666mm,170.815mm) on Top Overlay Silk Text to Silk Clearance [0.145mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=4545.238mil|Location2.X=4556.488mil|Location1.Y=6726.056mil|Location2.Y=6737.306mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=4545.238mil|Location2.X=4556.488mil|Location1.Y=6726.056mil|Location2.Y=6737.306mil|Absolute=True">Silk To Silk Clearance Constraint: (0.085mm &lt; 0.254mm) Between Text "51" (115.951mm,171.45mm) on Top Overlay And Track (76.581mm,170.815mm)(121.666mm,170.815mm) on Top Overlay Silk Text to Silk Clearance [0.085mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=4645.238mil|Location2.X=4656.488mil|Location1.Y=6726.056mil|Location2.Y=6737.306mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=4645.238mil|Location2.X=4656.488mil|Location1.Y=6726.056mil|Location2.Y=6737.306mil|Absolute=True">Silk To Silk Clearance Constraint: (0.085mm &lt; 0.254mm) Between Text "53" (118.491mm,171.45mm) on Top Overlay And Track (76.581mm,170.815mm)(121.666mm,170.815mm) on Top Overlay Silk Text to Silk Clearance [0.085mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=4747.594mil|Location2.X=4758.844mil|Location1.Y=6727.234mil|Location2.Y=6738.484mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=4747.594mil|Location2.X=4758.844mil|Location1.Y=6727.234mil|Location2.Y=6738.484mil|Absolute=True">Silk To Silk Clearance Constraint: (0.145mm &lt; 0.254mm) Between Text "GND" (121.031mm,171.45mm) on Top Overlay And Track (76.581mm,170.815mm)(121.666mm,170.815mm) on Top Overlay Silk Text to Silk Clearance [0.145mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=4760.613mil|Location2.X=4768.28mil|Location1.Y=6468.845mil|Location2.Y=6476.512mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=4760.613mil|Location2.X=4768.28mil|Location1.Y=6468.845mil|Location2.Y=6476.512mil|Absolute=True">Silk To Silk Clearance Constraint: (Collision &lt; 0.254mm) Between Text "GND" (120.396mm,163.83mm) on Top Overlay And Track (121.031mm,164.285mm)(121.533mm,164.788mm) on Top Overlay Silk Text to Silk Clearance [0mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=4760.139mil|Location2.X=4767.806mil|Location1.Y=6468.123mil|Location2.Y=6475.79mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=4760.139mil|Location2.X=4767.806mil|Location1.Y=6468.123mil|Location2.Y=6475.79mil|Absolute=True">Silk To Silk Clearance Constraint: (Collision &lt; 0.254mm) Between Text "GND" (120.396mm,163.83mm) on Top Overlay And Track (121.031mm,145.415mm)(121.031mm,164.285mm) on Top Overlay Silk Text to Silk Clearance [0mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2619.375mil|Location2.X=2630.625mil|Location1.Y=4821.068mil|Location2.Y=4832.318mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2619.375mil|Location2.X=2630.625mil|Location1.Y=4821.068mil|Location2.Y=4832.318mil|Absolute=True">Silk To Silk Clearance Constraint: (0.222mm &lt; 0.254mm) Between Text "2" (66.675mm,121.539mm) on Top Overlay And Track (64.897mm,122.809mm)(69.977mm,122.809mm) on Top Overlay Silk Text to Silk Clearance [0.222mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2619.375mil|Location2.X=2630.625mil|Location1.Y=3976.068mil|Location2.Y=3987.318mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2619.375mil|Location2.X=2630.625mil|Location1.Y=3976.068mil|Location2.Y=3987.318mil|Absolute=True">Silk To Silk Clearance Constraint: (0.222mm &lt; 0.254mm) Between Text "2" (66.675mm,100.076mm) on Top Overlay And Track (64.897mm,101.346mm)(69.977mm,101.346mm) on Top Overlay Silk Text to Silk Clearance [0.222mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2209.375mil|Location2.X=2220.625mil|Location1.Y=4866.068mil|Location2.Y=4877.318mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2209.375mil|Location2.X=2220.625mil|Location1.Y=4866.068mil|Location2.Y=4877.318mil|Absolute=True">Silk To Silk Clearance Constraint: (0.222mm &lt; 0.254mm) Between Text "2" (56.261mm,122.682mm) on Top Overlay And Track (54.483mm,123.952mm)(59.563mm,123.952mm) on Top Overlay Silk Text to Silk Clearance [0.222mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2309.375mil|Location2.X=2320.625mil|Location1.Y=4867.737mil|Location2.Y=4878.987mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2309.375mil|Location2.X=2320.625mil|Location1.Y=4867.737mil|Location2.Y=4878.987mil|Absolute=True">Silk To Silk Clearance Constraint: (0.137mm &lt; 0.254mm) Between Text "1" (58.801mm,123.19mm) on Top Overlay And Track (54.483mm,123.952mm)(59.563mm,123.952mm) on Top Overlay Silk Text to Silk Clearance [0.137mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2229.375mil|Location2.X=2240.625mil|Location1.Y=4026.068mil|Location2.Y=4037.318mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2229.375mil|Location2.X=2240.625mil|Location1.Y=4026.068mil|Location2.Y=4037.318mil|Absolute=True">Silk To Silk Clearance Constraint: (0.222mm &lt; 0.254mm) Between Text "2" (56.769mm,101.346mm) on Top Overlay And Track (54.991mm,102.616mm)(60.071mm,102.616mm) on Top Overlay Silk Text to Silk Clearance [0.222mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2329.375mil|Location2.X=2340.625mil|Location1.Y=4027.737mil|Location2.Y=4038.987mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2329.375mil|Location2.X=2340.625mil|Location1.Y=4027.737mil|Location2.Y=4038.987mil|Absolute=True">Silk To Silk Clearance Constraint: (0.137mm &lt; 0.254mm) Between Text "1" (59.309mm,101.854mm) on Top Overlay And Track (54.991mm,102.616mm)(60.071mm,102.616mm) on Top Overlay Silk Text to Silk Clearance [0.137mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2229.375mil|Location2.X=2240.625mil|Location1.Y=3176.068mil|Location2.Y=3187.318mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2229.375mil|Location2.X=2240.625mil|Location1.Y=3176.068mil|Location2.Y=3187.318mil|Absolute=True">Silk To Silk Clearance Constraint: (0.222mm &lt; 0.254mm) Between Text "2" (56.769mm,79.756mm) on Top Overlay And Track (54.991mm,81.026mm)(60.071mm,81.026mm) on Top Overlay Silk Text to Silk Clearance [0.222mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2329.375mil|Location2.X=2340.625mil|Location1.Y=3177.737mil|Location2.Y=3188.987mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=E:\sourcetree_ws\omni_robot\hardware\omni robot main board\omni robot pcb.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2329.375mil|Location2.X=2340.625mil|Location1.Y=3177.737mil|Location2.Y=3188.987mil|Absolute=True">Silk To Silk Clearance Constraint: (0.137mm &lt; 0.254mm) Between Text "1" (59.309mm,80.264mm) on Top Overlay And Track (54.991mm,81.026mm)(60.071mm,81.026mm) on Top Overlay Silk Text to Silk Clearance [0.137mm]</acronym></a><br></td>
+</tr>
+</table></a><hr color="#EEEEEE"><a href="#top" style="font-size: 0.9em">Back to top</a><br><br></body>
+</html>
