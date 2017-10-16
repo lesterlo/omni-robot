@@ -6,9 +6,9 @@
 #pragma pack(1)
 typedef struct {
   uint8_t cmd;
-  uint16_t vx; //x-axis speed
-  uint16_t vy; //y-axis speed
-  uint16_t wr; //Rotation speed
+  int16_t vx; //x-axis speed
+  int16_t vy; //y-axis speed
+  int16_t wr; //Rotation speed
 }Speed_cmd;
 
 //Due to Mega

@@ -78,28 +78,34 @@ void loop() {
 
     //Left Hat X-axis
     if(leftHatX_value < ps4_LeftHatX_deadLow){
+      outgoing_msg.cmd = 0x1;
       outgoing_msg.vx = leftHatX_value; //Negative, Maybe need conversion
       
     }else if(leftHatX_value > ps4_LeftHatX_deadHigh){
+      outgoing_msg.cmd = 0x1;
       outgoing_msg.vx = leftHatX_value; //Positive, Maybe need conversion
     }else{
-       outgoing_msg.vx = 0;
+       outgoing_msg.vx = 127;
     }
     //Left Hat Y-axis
     if(leftHatY_value < ps4_LeftHatY_deadLow){
+      outgoing_msg.cmd = 0x1;
       outgoing_msg.vy = leftHatY_value; //Negative, Maybe need conversion
     }else if(leftHatY_value > ps4_LeftHatX_deadHigh){
-      outgoing_msg.vx = leftHatY_value; //Positive, Maybe need conversion
+      outgoing_msg.cmd = 0x1;
+      outgoing_msg.vy = leftHatY_value; //Positive, Maybe need conversion
     }else{
-      outgoing_msg.vy = 0;
+      outgoing_msg.vy = 127;
     }
-    //Left Hat Y-axis
+    //Right Hat Y-axis
     if(rightHatX_value < ps4_RightHatX_deadLow){
+      outgoing_msg.cmd = 0x1;
       outgoing_msg.wr = rightHatX_value; //Negative, Maybe need conversion
     }else if(rightHatX_value > ps4_RightHatX_deadHigh){
+      outgoing_msg.cmd = 0x1;
       outgoing_msg.wr = rightHatX_value; //Positive, Maybe need conversion
     }else{
-      outgoing_msg.wr = 0;
+      outgoing_msg.wr = 127;
     }
 
     if (PS4.getButtonClick(L1)){
@@ -111,12 +117,14 @@ void loop() {
     }
 
     //Finally send command
+    
     due_Serial.write(reinterpret_cast<char *>(&outgoing_msg), sizeof(Speed_cmd));
- 
+    outgoing_msg.cmd = 0x0;
     //Disconnect
     if(PS4.getButtonClick(PS)) {
       PS4.disconnect();
     }
 
   }//END-PS4.Connected
+  delay(50);
 }//END-loop()

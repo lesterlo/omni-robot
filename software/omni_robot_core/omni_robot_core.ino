@@ -18,7 +18,8 @@ Speed_cmd mega_serialFrame;
 
 HardwareSerial& mega_serial = Serial3;
 
-int max_speed = 300;
+int max_speed = 500;
+int pwm_speed = 5000;
 
 //Variable
 
@@ -51,462 +52,15 @@ void setup() {
 
 void loop() {
 
-#ifdef DEBUG_MODE
-    int pwm_speed = 5000;
-
-    int motor1_speed = 0;
-    int motor2_speed = 0;
-    int motor3_speed = 0;
-
-    int remap_vx = 0;
-    int remap_vy = 0;
-    int remap_wr = 0;
-    if(Serial.available()){
-      switch(Serial.read()){
-        case 'c'://Stop
-        Serial.print("Stop\n");
-          remap_vx = 0;
-          remap_vy = 0;
-          remap_wr = 0;
-          
-          //Compute calculation
-          motor1_speed = (-sin(to_rad(MOTOR1_DEGREE))*remap_vx)+(cos(to_rad(MOTOR1_DEGREE))*remap_vy)+(1*remap_wr);
-          motor2_speed = (-sin(to_rad(MOTOR2_DEGREE))*remap_vx)+(cos(to_rad(MOTOR2_DEGREE))*remap_vy)+(1*remap_wr);
-          motor3_speed = (-sin(to_rad(MOTOR3_DEGREE))*remap_vx)+(cos(to_rad(MOTOR3_DEGREE))*remap_vy)+(1*remap_wr);
-
-          Serial.print("Motor1_speed: ");Serial.print(motor1_speed);Serial.print("\n");
-          Serial.print("Motor2_speed: ");Serial.print(motor2_speed);Serial.print("\n");
-          Serial.print("Motor3_speed: ");Serial.print(motor3_speed);Serial.print("\n");
-      
-          //Set motor 1
-          //module_setSpeed(outgoing_frame, 0x01, motor1_speed);
-          outgoing_frame.id = 0x014;
-          outgoing_frame.length = 8;
-          
-          outgoing_frame.data.byte[0] = (unsigned char) ((pwm_speed >>8) & 0xff);
-          outgoing_frame.data.byte[1] = (unsigned char) ( pwm_speed & 0xff);
-          outgoing_frame.data.byte[2] = (unsigned char) ((motor1_speed>>8) & 0xff);
-          outgoing_frame.data.byte[3] = (unsigned char) (motor1_speed  & 0xff);
-          outgoing_frame.data.byte[4] = 0x55;
-          outgoing_frame.data.byte[5] = 0x55;
-          outgoing_frame.data.byte[6] = 0x55;
-          outgoing_frame.data.byte[7] = 0x55;
-          Can0.sendFrame(outgoing_frame);
-          delay(10);
-          //Set motor 2
-          //module_setSpeed(outgoing_frame, 0x02, motor2_speed);
-          outgoing_frame.id =  0x024;
-          outgoing_frame.length = 8;
-          
-          outgoing_frame.data.byte[0] = (unsigned char) ((pwm_speed >>8) & 0xff);
-          outgoing_frame.data.byte[1] = (unsigned char) ( pwm_speed & 0xff);
-          outgoing_frame.data.byte[2] = (unsigned char) ((motor2_speed>>8) & 0xff);
-          outgoing_frame.data.byte[3] = (unsigned char) (motor2_speed  & 0xff);
-          outgoing_frame.data.byte[4] = 0x55;
-          outgoing_frame.data.byte[5] = 0x55;
-          outgoing_frame.data.byte[6] = 0x55;
-          outgoing_frame.data.byte[7] = 0x55;
-          Can0.sendFrame(outgoing_frame);
-          delay(10);
-          //Set motor 3
-          //module_setSpeed(outgoing_frame, 0x03, motor3_speed);
-          outgoing_frame.id =  0x034;
-          outgoing_frame.length = 8;
-          
-          outgoing_frame.data.byte[0] = (unsigned char) ((pwm_speed >>8) & 0xff);
-          outgoing_frame.data.byte[1] = (unsigned char) ( pwm_speed & 0xff);
-          outgoing_frame.data.byte[2] = (unsigned char) ((motor3_speed>>8) & 0xff);
-          outgoing_frame.data.byte[3] = (unsigned char) (motor3_speed  & 0xff);
-          outgoing_frame.data.byte[4] = 0x55;
-          outgoing_frame.data.byte[5] = 0x55;
-          outgoing_frame.data.byte[6] = 0x55;
-          outgoing_frame.data.byte[7] = 0x55;
-          Can0.sendFrame(outgoing_frame);
-          delay(10);
-        break;
-
-        case 'w'://Up
-        Serial.print("Up\n");
-          remap_vx = 0;
-          remap_vy = max_speed;
-          remap_wr = 0;
-          
-          //Compute calculation
-          motor1_speed = (-sin(to_rad(MOTOR1_DEGREE))*remap_vx)+(cos(to_rad(MOTOR1_DEGREE))*remap_vy)+(1*remap_wr);
-          motor2_speed = (-sin(to_rad(MOTOR2_DEGREE))*remap_vx)+(cos(to_rad(MOTOR2_DEGREE))*remap_vy)+(1*remap_wr);
-          motor3_speed = (-sin(to_rad(MOTOR3_DEGREE))*remap_vx)+(cos(to_rad(MOTOR3_DEGREE))*remap_vy)+(1*remap_wr);
-
-          Serial.print("Motor1_speed: ");Serial.print(motor1_speed);Serial.print("\n");
-          Serial.print("Motor2_speed: ");Serial.print(motor2_speed);Serial.print("\n");
-          Serial.print("Motor3_speed: ");Serial.print(motor3_speed);Serial.print("\n");
-      
-          //Set motor 1
-          //module_setSpeed(outgoing_frame, 0x01, motor1_speed);
-          outgoing_frame.id = 0x014;
-          outgoing_frame.length = 8;
-          
-          outgoing_frame.data.byte[0] = (unsigned char) ((pwm_speed >>8) & 0xff);
-          outgoing_frame.data.byte[1] = (unsigned char) ( pwm_speed & 0xff);
-          outgoing_frame.data.byte[2] = (unsigned char) ((motor1_speed>>8) & 0xff);
-          outgoing_frame.data.byte[3] = (unsigned char) (motor1_speed  & 0xff);
-          outgoing_frame.data.byte[4] = 0x55;
-          outgoing_frame.data.byte[5] = 0x55;
-          outgoing_frame.data.byte[6] = 0x55;
-          outgoing_frame.data.byte[7] = 0x55;
-          Can0.sendFrame(outgoing_frame);
-          delay(10);
-          //Set motor 2
-          //module_setSpeed(outgoing_frame, 0x02, motor2_speed);
-          outgoing_frame.id =  0x024;
-          outgoing_frame.length = 8;
-          
-          outgoing_frame.data.byte[0] = (unsigned char) ((pwm_speed >>8) & 0xff);
-          outgoing_frame.data.byte[1] = (unsigned char) ( pwm_speed & 0xff);
-          outgoing_frame.data.byte[2] = (unsigned char) ((motor2_speed>>8) & 0xff);
-          outgoing_frame.data.byte[3] = (unsigned char) (motor2_speed  & 0xff);
-          outgoing_frame.data.byte[4] = 0x55;
-          outgoing_frame.data.byte[5] = 0x55;
-          outgoing_frame.data.byte[6] = 0x55;
-          outgoing_frame.data.byte[7] = 0x55;
-          Can0.sendFrame(outgoing_frame);
-          delay(10);
-          //Set motor 3
-          //module_setSpeed(outgoing_frame, 0x03, motor3_speed);
-          outgoing_frame.id =  0x034;
-          outgoing_frame.length = 8;
-          
-          outgoing_frame.data.byte[0] = (unsigned char) ((pwm_speed >>8) & 0xff);
-          outgoing_frame.data.byte[1] = (unsigned char) ( pwm_speed & 0xff);
-          outgoing_frame.data.byte[2] = (unsigned char) ((motor3_speed>>8) & 0xff);
-          outgoing_frame.data.byte[3] = (unsigned char) (motor3_speed  & 0xff);
-          outgoing_frame.data.byte[4] = 0x55;
-          outgoing_frame.data.byte[5] = 0x55;
-          outgoing_frame.data.byte[6] = 0x55;
-          outgoing_frame.data.byte[7] = 0x55;
-          Can0.sendFrame(outgoing_frame);
-          delay(10);
-        break;
-
-        case 's'://Down
-        Serial.print("Down\n");
-          remap_vx = 0;
-          remap_vy = -max_speed;
-          remap_wr = 0;
-          
-          //Compute calculation
-          motor1_speed = (-sin(to_rad(MOTOR1_DEGREE))*remap_vx)+(cos(to_rad(MOTOR1_DEGREE))*remap_vy)+(1*remap_wr);
-          motor2_speed = (-sin(to_rad(MOTOR2_DEGREE))*remap_vx)+(cos(to_rad(MOTOR2_DEGREE))*remap_vy)+(1*remap_wr);
-          motor3_speed = (-sin(to_rad(MOTOR3_DEGREE))*remap_vx)+(cos(to_rad(MOTOR3_DEGREE))*remap_vy)+(1*remap_wr);
-
-          Serial.print("Motor1_speed: ");Serial.print(motor1_speed);Serial.print("\n");
-          Serial.print("Motor2_speed: ");Serial.print(motor2_speed);Serial.print("\n");
-          Serial.print("Motor3_speed: ");Serial.print(motor3_speed);Serial.print("\n");
-      
-          //Set motor 1
-          //module_setSpeed(outgoing_frame, 0x01, motor1_speed);
-          outgoing_frame.id = 0x014;
-          outgoing_frame.length = 8;
-          
-          outgoing_frame.data.byte[0] = (unsigned char) ((pwm_speed >>8) & 0xff);
-          outgoing_frame.data.byte[1] = (unsigned char) ( pwm_speed & 0xff);
-          outgoing_frame.data.byte[2] = (unsigned char) ((motor1_speed>>8) & 0xff);
-          outgoing_frame.data.byte[3] = (unsigned char) (motor1_speed  & 0xff);
-          outgoing_frame.data.byte[4] = 0x55;
-          outgoing_frame.data.byte[5] = 0x55;
-          outgoing_frame.data.byte[6] = 0x55;
-          outgoing_frame.data.byte[7] = 0x55;
-          Can0.sendFrame(outgoing_frame);
-          delay(10);
-          //Set motor 2
-          //module_setSpeed(outgoing_frame, 0x02, motor2_speed);
-          outgoing_frame.id =  0x024;
-          outgoing_frame.length = 8;
-          
-          outgoing_frame.data.byte[0] = (unsigned char) ((pwm_speed >>8) & 0xff);
-          outgoing_frame.data.byte[1] = (unsigned char) ( pwm_speed & 0xff);
-          outgoing_frame.data.byte[2] = (unsigned char) ((motor2_speed>>8) & 0xff);
-          outgoing_frame.data.byte[3] = (unsigned char) (motor2_speed  & 0xff);
-          outgoing_frame.data.byte[4] = 0x55;
-          outgoing_frame.data.byte[5] = 0x55;
-          outgoing_frame.data.byte[6] = 0x55;
-          outgoing_frame.data.byte[7] = 0x55;
-          Can0.sendFrame(outgoing_frame);
-          delay(10);
-          //Set motor 3
-          //module_setSpeed(outgoing_frame, 0x03, motor3_speed);
-          outgoing_frame.id =  0x034;
-          outgoing_frame.length = 8;
-          
-          outgoing_frame.data.byte[0] = (unsigned char) ((pwm_speed >>8) & 0xff);
-          outgoing_frame.data.byte[1] = (unsigned char) ( pwm_speed & 0xff);
-          outgoing_frame.data.byte[2] = (unsigned char) ((motor3_speed>>8) & 0xff);
-          outgoing_frame.data.byte[3] = (unsigned char) (motor3_speed  & 0xff);
-          outgoing_frame.data.byte[4] = 0x55;
-          outgoing_frame.data.byte[5] = 0x55;
-          outgoing_frame.data.byte[6] = 0x55;
-          outgoing_frame.data.byte[7] = 0x55;
-          Can0.sendFrame(outgoing_frame);
-          delay(10);
-        break;
-
-        case 'a'://Left
-        Serial.print("Left\n");
-          remap_vx = -max_speed;
-          remap_vy = 0;
-          remap_wr = 0;
-          
-          //Compute calculation
-          motor1_speed = (-sin(to_rad(MOTOR1_DEGREE))*remap_vx)+(cos(to_rad(MOTOR1_DEGREE))*remap_vy)+(1*remap_wr);
-          motor2_speed = (-sin(to_rad(MOTOR2_DEGREE))*remap_vx)+(cos(to_rad(MOTOR2_DEGREE))*remap_vy)+(1*remap_wr);
-          motor3_speed = (-sin(to_rad(MOTOR3_DEGREE))*remap_vx)+(cos(to_rad(MOTOR3_DEGREE))*remap_vy)+(1*remap_wr);
-
-          Serial.print("Motor1_speed: ");Serial.print(motor1_speed);Serial.print("\n");
-          Serial.print("Motor2_speed: ");Serial.print(motor2_speed);Serial.print("\n");
-          Serial.print("Motor3_speed: ");Serial.print(motor3_speed);Serial.print("\n");
-      
-          //Set motor 1
-          //module_setSpeed(outgoing_frame, 0x01, motor1_speed);
-          outgoing_frame.id = 0x014;
-          outgoing_frame.length = 8;
-          
-          outgoing_frame.data.byte[0] = (unsigned char) ((pwm_speed >>8) & 0xff);
-          outgoing_frame.data.byte[1] = (unsigned char) ( pwm_speed & 0xff);
-          outgoing_frame.data.byte[2] = (unsigned char) ((motor1_speed>>8) & 0xff);
-          outgoing_frame.data.byte[3] = (unsigned char) (motor1_speed  & 0xff);
-          outgoing_frame.data.byte[4] = 0x55;
-          outgoing_frame.data.byte[5] = 0x55;
-          outgoing_frame.data.byte[6] = 0x55;
-          outgoing_frame.data.byte[7] = 0x55;
-          Can0.sendFrame(outgoing_frame);
-          delay(10);
-          //Set motor 2
-          //module_setSpeed(outgoing_frame, 0x02, motor2_speed);
-          outgoing_frame.id =  0x024;
-          outgoing_frame.length = 8;
-          
-          outgoing_frame.data.byte[0] = (unsigned char) ((pwm_speed >>8) & 0xff);
-          outgoing_frame.data.byte[1] = (unsigned char) ( pwm_speed & 0xff);
-          outgoing_frame.data.byte[2] = (unsigned char) ((motor2_speed>>8) & 0xff);
-          outgoing_frame.data.byte[3] = (unsigned char) (motor2_speed  & 0xff);
-          outgoing_frame.data.byte[4] = 0x55;
-          outgoing_frame.data.byte[5] = 0x55;
-          outgoing_frame.data.byte[6] = 0x55;
-          outgoing_frame.data.byte[7] = 0x55;
-          Can0.sendFrame(outgoing_frame);
-          delay(10);
-          //Set motor 3
-          //module_setSpeed(outgoing_frame, 0x03, motor3_speed);
-          outgoing_frame.id =  0x034;
-          outgoing_frame.length = 8;
-          
-          outgoing_frame.data.byte[0] = (unsigned char) ((pwm_speed >>8) & 0xff);
-          outgoing_frame.data.byte[1] = (unsigned char) ( pwm_speed & 0xff);
-          outgoing_frame.data.byte[2] = (unsigned char) ((motor3_speed>>8) & 0xff);
-          outgoing_frame.data.byte[3] = (unsigned char) (motor3_speed  & 0xff);
-          outgoing_frame.data.byte[4] = 0x55;
-          outgoing_frame.data.byte[5] = 0x55;
-          outgoing_frame.data.byte[6] = 0x55;
-          outgoing_frame.data.byte[7] = 0x55;
-          Can0.sendFrame(outgoing_frame);
-          delay(10);
-        break;
-
-        case 'd'://Right
-        Serial.print("Right\n");
-          remap_vx = max_speed;
-          remap_vy = 0;
-          remap_wr = 0;
-          
-          //Compute calculation
-          motor1_speed = (-sin(to_rad(MOTOR1_DEGREE))*remap_vx)+(cos(to_rad(MOTOR1_DEGREE))*remap_vy)+(1*remap_wr);
-          motor2_speed = (-sin(to_rad(MOTOR2_DEGREE))*remap_vx)+(cos(to_rad(MOTOR2_DEGREE))*remap_vy)+(1*remap_wr);
-          motor3_speed = (-sin(to_rad(MOTOR3_DEGREE))*remap_vx)+(cos(to_rad(MOTOR3_DEGREE))*remap_vy)+(1*remap_wr);
-
-          Serial.print("Motor1_speed: ");Serial.print(motor1_speed);Serial.print("\n");
-          Serial.print("Motor2_speed: ");Serial.print(motor2_speed);Serial.print("\n");
-          Serial.print("Motor3_speed: ");Serial.print(motor3_speed);Serial.print("\n");
-      
-          //Set motor 1
-          //module_setSpeed(outgoing_frame, 0x01, motor1_speed);
-          outgoing_frame.id = 0x014;
-          outgoing_frame.length = 8;
-          
-          outgoing_frame.data.byte[0] = (unsigned char) ((pwm_speed >>8) & 0xff);
-          outgoing_frame.data.byte[1] = (unsigned char) ( pwm_speed & 0xff);
-          outgoing_frame.data.byte[2] = (unsigned char) ((motor1_speed>>8) & 0xff);
-          outgoing_frame.data.byte[3] = (unsigned char) (motor1_speed  & 0xff);
-          outgoing_frame.data.byte[4] = 0x55;
-          outgoing_frame.data.byte[5] = 0x55;
-          outgoing_frame.data.byte[6] = 0x55;
-          outgoing_frame.data.byte[7] = 0x55;
-          Can0.sendFrame(outgoing_frame);
-          delay(10);
-          //Set motor 2
-          //module_setSpeed(outgoing_frame, 0x02, motor2_speed);
-          outgoing_frame.id =  0x024;
-          outgoing_frame.length = 8;
-          
-          outgoing_frame.data.byte[0] = (unsigned char) ((pwm_speed >>8) & 0xff);
-          outgoing_frame.data.byte[1] = (unsigned char) ( pwm_speed & 0xff);
-          outgoing_frame.data.byte[2] = (unsigned char) ((motor2_speed>>8) & 0xff);
-          outgoing_frame.data.byte[3] = (unsigned char) (motor2_speed  & 0xff);
-          outgoing_frame.data.byte[4] = 0x55;
-          outgoing_frame.data.byte[5] = 0x55;
-          outgoing_frame.data.byte[6] = 0x55;
-          outgoing_frame.data.byte[7] = 0x55;
-          Can0.sendFrame(outgoing_frame);
-          delay(10);
-          //Set motor 3
-          //module_setSpeed(outgoing_frame, 0x03, motor3_speed);
-          outgoing_frame.id =  0x034;
-          outgoing_frame.length = 8;
-          
-          outgoing_frame.data.byte[0] = (unsigned char) ((pwm_speed >>8) & 0xff);
-          outgoing_frame.data.byte[1] = (unsigned char) ( pwm_speed & 0xff);
-          outgoing_frame.data.byte[2] = (unsigned char) ((motor3_speed>>8) & 0xff);
-          outgoing_frame.data.byte[3] = (unsigned char) (motor3_speed  & 0xff);
-          outgoing_frame.data.byte[4] = 0x55;
-          outgoing_frame.data.byte[5] = 0x55;
-          outgoing_frame.data.byte[6] = 0x55;
-          outgoing_frame.data.byte[7] = 0x55;
-          Can0.sendFrame(outgoing_frame);
-          delay(10);
-        break;
-
-        case 'q'://Rotate Anti Clockwise
-        Serial.print("Rotate Anti Clockwise\n");
-          remap_vx = 0;
-          remap_vy = 0;
-          remap_wr = -max_speed;
-          
-          //Compute calculation
-          motor1_speed = (-sin(to_rad(MOTOR1_DEGREE))*remap_vx)+(cos(to_rad(MOTOR1_DEGREE))*remap_vy)+(1*remap_wr);
-          motor2_speed = (-sin(to_rad(MOTOR2_DEGREE))*remap_vx)+(cos(to_rad(MOTOR2_DEGREE))*remap_vy)+(1*remap_wr);
-          motor3_speed = (-sin(to_rad(MOTOR3_DEGREE))*remap_vx)+(cos(to_rad(MOTOR3_DEGREE))*remap_vy)+(1*remap_wr);
-
-          Serial.print("Motor1_speed: ");Serial.print(motor1_speed);Serial.print("\n");
-          Serial.print("Motor2_speed: ");Serial.print(motor2_speed);Serial.print("\n");
-          Serial.print("Motor3_speed: ");Serial.print(motor3_speed);Serial.print("\n");
-      
-          //Set motor 1
-          //module_setSpeed(outgoing_frame, 0x01, motor1_speed);
-          outgoing_frame.id = 0x014;
-          outgoing_frame.length = 8;
-          
-          outgoing_frame.data.byte[0] = (unsigned char) ((pwm_speed >>8) & 0xff);
-          outgoing_frame.data.byte[1] = (unsigned char) ( pwm_speed & 0xff);
-          outgoing_frame.data.byte[2] = (unsigned char) ((motor1_speed>>8) & 0xff);
-          outgoing_frame.data.byte[3] = (unsigned char) (motor1_speed  & 0xff);
-          outgoing_frame.data.byte[4] = 0x55;
-          outgoing_frame.data.byte[5] = 0x55;
-          outgoing_frame.data.byte[6] = 0x55;
-          outgoing_frame.data.byte[7] = 0x55;
-          Can0.sendFrame(outgoing_frame);
-          delay(10);
-          //Set motor 2
-          //module_setSpeed(outgoing_frame, 0x02, motor2_speed);
-          outgoing_frame.id =  0x024;
-          outgoing_frame.length = 8;
-          
-          outgoing_frame.data.byte[0] = (unsigned char) ((pwm_speed >>8) & 0xff);
-          outgoing_frame.data.byte[1] = (unsigned char) ( pwm_speed & 0xff);
-          outgoing_frame.data.byte[2] = (unsigned char) ((motor2_speed>>8) & 0xff);
-          outgoing_frame.data.byte[3] = (unsigned char) (motor2_speed  & 0xff);
-          outgoing_frame.data.byte[4] = 0x55;
-          outgoing_frame.data.byte[5] = 0x55;
-          outgoing_frame.data.byte[6] = 0x55;
-          outgoing_frame.data.byte[7] = 0x55;
-          Can0.sendFrame(outgoing_frame);
-          delay(10);
-          //Set motor 3
-          //module_setSpeed(outgoing_frame, 0x03, motor3_speed);
-          outgoing_frame.id =  0x034;
-          outgoing_frame.length = 8;
-          
-          outgoing_frame.data.byte[0] = (unsigned char) ((pwm_speed >>8) & 0xff);
-          outgoing_frame.data.byte[1] = (unsigned char) ( pwm_speed & 0xff);
-          outgoing_frame.data.byte[2] = (unsigned char) ((motor3_speed>>8) & 0xff);
-          outgoing_frame.data.byte[3] = (unsigned char) (motor3_speed  & 0xff);
-          outgoing_frame.data.byte[4] = 0x55;
-          outgoing_frame.data.byte[5] = 0x55;
-          outgoing_frame.data.byte[6] = 0x55;
-          outgoing_frame.data.byte[7] = 0x55;
-          Can0.sendFrame(outgoing_frame);
-          delay(10);
-        break;
-
-        case 'e'://rotate clockwiare
-        Serial.print("rotate clockwiare\n");
-          remap_vx = 0;
-          remap_vy = 0;
-          remap_wr = max_speed;
-          
-          //Compute calculation
-          motor1_speed = (-sin(to_rad(MOTOR1_DEGREE))*remap_vx)+(cos(to_rad(MOTOR1_DEGREE))*remap_vy)+(1*remap_wr);
-          motor2_speed = (-sin(to_rad(MOTOR2_DEGREE))*remap_vx)+(cos(to_rad(MOTOR2_DEGREE))*remap_vy)+(1*remap_wr);
-          motor3_speed = (-sin(to_rad(MOTOR3_DEGREE))*remap_vx)+(cos(to_rad(MOTOR3_DEGREE))*remap_vy)+(1*remap_wr);
-
-          Serial.print("Motor1_speed: ");Serial.print(motor1_speed);Serial.print("\n");
-          Serial.print("Motor2_speed: ");Serial.print(motor2_speed);Serial.print("\n");
-          Serial.print("Motor3_speed: ");Serial.print(motor3_speed);Serial.print("\n");
-      
-          //Set motor 1
-          //module_setSpeed(outgoing_frame, 0x01, motor1_speed);
-          outgoing_frame.id = 0x014;
-          outgoing_frame.length = 8;
-          
-          outgoing_frame.data.byte[0] = (unsigned char) ((pwm_speed >>8) & 0xff);
-          outgoing_frame.data.byte[1] = (unsigned char) ( pwm_speed & 0xff);
-          outgoing_frame.data.byte[2] = (unsigned char) ((motor1_speed>>8) & 0xff);
-          outgoing_frame.data.byte[3] = (unsigned char) (motor1_speed  & 0xff);
-          outgoing_frame.data.byte[4] = 0x55;
-          outgoing_frame.data.byte[5] = 0x55;
-          outgoing_frame.data.byte[6] = 0x55;
-          outgoing_frame.data.byte[7] = 0x55;
-          Can0.sendFrame(outgoing_frame);
-          delay(10);
-          //Set motor 2
-          //module_setSpeed(outgoing_frame, 0x02, motor2_speed);
-          outgoing_frame.id =  0x024;
-          outgoing_frame.length = 8;
-          
-          outgoing_frame.data.byte[0] = (unsigned char) ((pwm_speed >>8) & 0xff);
-          outgoing_frame.data.byte[1] = (unsigned char) ( pwm_speed & 0xff);
-          outgoing_frame.data.byte[2] = (unsigned char) ((motor2_speed>>8) & 0xff);
-          outgoing_frame.data.byte[3] = (unsigned char) (motor2_speed  & 0xff);
-          outgoing_frame.data.byte[4] = 0x55;
-          outgoing_frame.data.byte[5] = 0x55;
-          outgoing_frame.data.byte[6] = 0x55;
-          outgoing_frame.data.byte[7] = 0x55;
-          Can0.sendFrame(outgoing_frame);
-          delay(10);
-          //Set motor 3
-          //module_setSpeed(outgoing_frame, 0x03, motor3_speed);
-          outgoing_frame.id =  0x034;
-          outgoing_frame.length = 8;
-          
-          outgoing_frame.data.byte[0] = (unsigned char) ((pwm_speed >>8) & 0xff);
-          outgoing_frame.data.byte[1] = (unsigned char) ( pwm_speed & 0xff);
-          outgoing_frame.data.byte[2] = (unsigned char) ((motor3_speed>>8) & 0xff);
-          outgoing_frame.data.byte[3] = (unsigned char) (motor3_speed  & 0xff);
-          outgoing_frame.data.byte[4] = 0x55;
-          outgoing_frame.data.byte[5] = 0x55;
-          outgoing_frame.data.byte[6] = 0x55;
-          outgoing_frame.data.byte[7] = 0x55;
-          Can0.sendFrame(outgoing_frame);
-          delay(10);
-        break;
-
-        
-      }
-    }
-#else
   if(mega_serial.available()){
     //Receive Controller Command
     mega_serial.readBytes(reinterpret_cast<char *>(&mega_serialFrame), sizeof(Speed_cmd));
 
 #ifdef DEBUG_MODE
     Serial.print("Receive PS4");
+    Serial.print("vx=");Serial.print(mega_serialFrame.vx);Serial.print("\n");
+    Serial.print("vy=");Serial.print(mega_serialFrame.vy);Serial.print("\n");
+    Serial.print("wr=");Serial.print(mega_serialFrame.wr );Serial.print("\n");
 #endif
 
     //Start
@@ -526,10 +80,23 @@ void loop() {
     
     //Command Move
     case 0x1:
+      if(mega_serialFrame.vx==127 || mega_serialFrame.vy==127 || mega_serialFrame.wr==127)
+        break;
       remap_vx = map(mega_serialFrame.vx, 0, 255, -max_speed, max_speed);
       remap_vy = map(mega_serialFrame.vy, 255, 0, -max_speed, max_speed);
       remap_wr = map(mega_serialFrame.wr, 0, 255, -max_speed, max_speed);
-      
+
+#ifdef DEBUG_MODE
+    Serial.print("Receive remap");
+    Serial.print("rvx=");Serial.print(remap_vx);Serial.print("\n");
+    Serial.print("rvy=");Serial.print(remap_vy);Serial.print("\n");
+    Serial.print("rwr=");Serial.print(remap_wr);Serial.print("\n");
+#endif
+      if(mega_serialFrame.vx==127 || mega_serialFrame.vy==127 || mega_serialFrame.wr==127){
+        remap_vx=0;
+        remap_vy=0;
+        remap_wr=0;
+      }
       //Compute calculation
       motor1_speed = (-sin(to_rad(MOTOR1_DEGREE))*remap_vx)+(cos(to_rad(MOTOR1_DEGREE))*remap_vy)+(1*remap_wr);
       motor2_speed = (-sin(to_rad(MOTOR2_DEGREE))*remap_vx)+(cos(to_rad(MOTOR2_DEGREE))*remap_vy)+(1*remap_wr);
@@ -539,15 +106,45 @@ void loop() {
   
        
       //Set motor 1
-      module_setSpeed(outgoing_frame, 0x01, motor1_speed);
+      outgoing_frame.id =  0x014;
+      outgoing_frame.length = 8;
+      
+      outgoing_frame.data.byte[0] = (unsigned char) ((pwm_speed >>8) & 0xff);
+      outgoing_frame.data.byte[1] = (unsigned char) ( pwm_speed & 0xff);
+      outgoing_frame.data.byte[2] = (unsigned char) ((motor1_speed>>8) & 0xff);
+      outgoing_frame.data.byte[3] = (unsigned char) (motor1_speed  & 0xff);
+      outgoing_frame.data.byte[4] = 0x55;
+      outgoing_frame.data.byte[5] = 0x55;
+      outgoing_frame.data.byte[6] = 0x55;
+      outgoing_frame.data.byte[7] = 0x55;
       Can0.sendFrame(outgoing_frame);
       delay(10);
       //Set motor 2
-      module_setSpeed(outgoing_frame, 0x02, motor2_speed);
+      outgoing_frame.id =  0x024;
+      outgoing_frame.length = 8;
+      
+      outgoing_frame.data.byte[0] = (unsigned char) ((pwm_speed >>8) & 0xff);
+      outgoing_frame.data.byte[1] = (unsigned char) ( pwm_speed & 0xff);
+      outgoing_frame.data.byte[2] = (unsigned char) ((motor2_speed>>8) & 0xff);
+      outgoing_frame.data.byte[3] = (unsigned char) (motor2_speed  & 0xff);
+      outgoing_frame.data.byte[4] = 0x55;
+      outgoing_frame.data.byte[5] = 0x55;
+      outgoing_frame.data.byte[6] = 0x55;
+      outgoing_frame.data.byte[7] = 0x55;
       Can0.sendFrame(outgoing_frame);
       delay(10);
       //Set motor 3
-      module_setSpeed(outgoing_frame, 0x03, motor3_speed);
+      outgoing_frame.id =  0x034;
+      outgoing_frame.length = 8;
+      
+      outgoing_frame.data.byte[0] = (unsigned char) ((pwm_speed >>8) & 0xff);
+      outgoing_frame.data.byte[1] = (unsigned char) ( pwm_speed & 0xff);
+      outgoing_frame.data.byte[2] = (unsigned char) ((motor3_speed>>8) & 0xff);
+      outgoing_frame.data.byte[3] = (unsigned char) (motor3_speed  & 0xff);
+      outgoing_frame.data.byte[4] = 0x55;
+      outgoing_frame.data.byte[5] = 0x55;
+      outgoing_frame.data.byte[6] = 0x55;
+      outgoing_frame.data.byte[7] = 0x55;
       Can0.sendFrame(outgoing_frame);
       delay(10);
     break;
@@ -569,7 +166,6 @@ void loop() {
     break;  
     }//END-Switch Case
   }//END-Mega Serial
-#endif
 
 }
 
