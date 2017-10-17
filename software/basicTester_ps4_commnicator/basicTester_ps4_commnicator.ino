@@ -8,6 +8,8 @@
  *  
  */
 #include "commu_data_exchange.h"
+
+#define DEBUG_MODE
  
 HardwareSerial &due_Serial = Serial3;
 
@@ -25,19 +27,22 @@ USB Usb;
 BTD Btd(&Usb);
 PS4BT PS4(&Btd);
 
-const int ps4_LeftHatX_deadHigh = 133;
-const int ps4_LeftHatX_deadLow = 125;
-const int ps4_LeftHatY_deadHigh = 133;
-const int ps4_LeftHatY_deadLow = 125;
+const int ps4_LeftHatX_deadHigh = 135;
+const int ps4_LeftHatX_deadLow = 120;
+const int ps4_LeftHatY_deadHigh = 135;
+const int ps4_LeftHatY_deadLow = 120;
 
-const int ps4_RightHatX_deadHigh = 133;
-const int ps4_RightHatX_deadLow = 125;
-const int ps4_RightHatY_deadHigh = 133;
-const int ps4_RightHatY_deadLow = 125;
+const int ps4_RightHatX_deadHigh = 135;
+const int ps4_RightHatX_deadLow = 120;
+const int ps4_RightHatY_deadHigh = 135;
+const int ps4_RightHatY_deadLow = 120;
 
 //Variable
 float hat_speed_multiply = 0.1;
 Speed_cmd outgoing_msg;
+
+char send_char = 0;
+char prev_char = 0;
 
 
 void setup() {
@@ -45,9 +50,9 @@ void setup() {
 
 #ifdef DEBUG_MODE
   Serial.begin(115200);
-#else
-  due_Serial.begin(115200);
 #endif
+  due_Serial.begin(115200);
+
 
 
   //Connect to PS4 Remote
@@ -69,6 +74,8 @@ void loop() {
     if(PS4.getButtonClick(TOUCHPAD)){
 
     }
+    prev_char = send_char;
+    send_char = 'c';
   
   //Hat Control
     int leftHatX_value = PS4.getAnalogHat(LeftHatX);
@@ -78,53 +85,37 @@ void loop() {
 
     //Left Hat X-axis
     if(leftHatX_value < ps4_LeftHatX_deadLow){
-      outgoing_msg.cmd = 0x1;
-      outgoing_msg.vx = leftHatX_value; //Negative, Maybe need conversion
+      send_char = 'a';
       
     }else if(leftHatX_value > ps4_LeftHatX_deadHigh){
-      outgoing_msg.cmd = 0x1;
-      outgoing_msg.vx = leftHatX_value; //Positive, Maybe need conversion
-    }else{
-       outgoing_msg.vx = 127;
+      send_char = 'd';
     }
     //Left Hat Y-axis
     if(leftHatY_value < ps4_LeftHatY_deadLow){
-      outgoing_msg.cmd = 0x1;
-      outgoing_msg.vy = leftHatY_value; //Negative, Maybe need conversion
+      send_char = 'w';
     }else if(leftHatY_value > ps4_LeftHatX_deadHigh){
-      outgoing_msg.cmd = 0x1;
-      outgoing_msg.vy = leftHatY_value; //Positive, Maybe need conversion
-    }else{
-      outgoing_msg.vy = 127;
+      send_char = 's';
     }
     //Right Hat Y-axis
     if(rightHatX_value < ps4_RightHatX_deadLow){
-      outgoing_msg.cmd = 0x1;
-      outgoing_msg.wr = rightHatX_value; //Negative, Maybe need conversion
+      send_char = 'q';
     }else if(rightHatX_value > ps4_RightHatX_deadHigh){
-      outgoing_msg.cmd = 0x1;
-      outgoing_msg.wr = rightHatX_value; //Positive, Maybe need conversion
-    }else{
-      outgoing_msg.wr = 127;
+      send_char = 'e';
     }
+    
 
-    if (PS4.getButtonClick(L1)){
-      outgoing_msg.cmd = 0x2;
-    }
-
-    if (PS4.getButtonClick(R1)){
-        outgoing_msg.vx = 0x3;
-    }
 
     //Finally send command
+    if(prev_char != send_char){
+      due_Serial.print(send_char);
+      Serial.print(send_char);
+    }
     
-    due_Serial.write(reinterpret_cast<char *>(&outgoing_msg), sizeof(Speed_cmd));
-    outgoing_msg.cmd = 0x0;
     //Disconnect
     if(PS4.getButtonClick(PS)) {
+      due_Serial.print('c');
       PS4.disconnect();
     }
 
   }//END-PS4.Connected
-  delay(50);
 }//END-loop()

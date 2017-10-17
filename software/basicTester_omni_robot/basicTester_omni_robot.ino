@@ -2,12 +2,15 @@
 #include "commu_data_exchange.h"
 #include "due_can.h"
 
-#define DEBUG_MODE
+//#define DEBUG_MODE
 
 
-const int MOTOR1_DEGREE = 0+90;
-const int MOTOR2_DEGREE = 120+90;
-const int MOTOR3_DEGREE = 240+90;
+
+const int VECTOR_DIRECTION = 175;
+
+const int MOTOR1_DEGREE = 0+VECTOR_DIRECTION;
+const int MOTOR2_DEGREE = 120+VECTOR_DIRECTION;
+const int MOTOR3_DEGREE = 240+VECTOR_DIRECTION;
 
 
 const int CANBUS_ENABLE_PIN = 23;
@@ -16,7 +19,6 @@ const int CANBUS_ENABLE_PIN = 23;
 CAN_FRAME outgoing_frame;
 Speed_cmd mega_serialFrame;
 
-HardwareSerial& mega_serial = Serial3;
 
 int max_speed = 300;
 
@@ -28,8 +30,10 @@ void setup() {
   #ifdef DEBUG_MODE
     Serial.begin(115200);
     Serial.print("Start\n");
+  #else
+    Serial3.begin(115200);
   #endif
-  mega_serial.begin(115200);
+  
   Can0.begin(CAN_BPS_1000K); //Setup CAN bus
 
   pinMode(CANBUS_ENABLE_PIN, OUTPUT);
@@ -51,7 +55,6 @@ void setup() {
 
 void loop() {
 
-#ifdef DEBUG_MODE
     int pwm_speed = 5000;
 
     int motor1_speed = 0;
@@ -61,10 +64,19 @@ void loop() {
     int remap_vx = 0;
     int remap_vy = 0;
     int remap_wr = 0;
+
+#ifdef DEBUG_MODE
     if(Serial.available()){
       switch(Serial.read()){
+#else
+    if(Serial3.available()){
+      switch(Serial3.read()){
+#endif
+
         case 'c'://Stop
+  #ifdef DEBUG_MODE
         Serial.print("Stop\n");
+  #endif
           remap_vx = 0;
           remap_vy = 0;
           remap_wr = 0;
@@ -73,11 +85,11 @@ void loop() {
           motor1_speed = (-sin(to_rad(MOTOR1_DEGREE))*remap_vx)+(cos(to_rad(MOTOR1_DEGREE))*remap_vy)+(1*remap_wr);
           motor2_speed = (-sin(to_rad(MOTOR2_DEGREE))*remap_vx)+(cos(to_rad(MOTOR2_DEGREE))*remap_vy)+(1*remap_wr);
           motor3_speed = (-sin(to_rad(MOTOR3_DEGREE))*remap_vx)+(cos(to_rad(MOTOR3_DEGREE))*remap_vy)+(1*remap_wr);
-
+#ifdef DEBUG_MODE
           Serial.print("Motor1_speed: ");Serial.print(motor1_speed);Serial.print("\n");
           Serial.print("Motor2_speed: ");Serial.print(motor2_speed);Serial.print("\n");
           Serial.print("Motor3_speed: ");Serial.print(motor3_speed);Serial.print("\n");
-      
+#endif     
           //Set motor 1
           //module_setSpeed(outgoing_frame, 0x01, motor1_speed);
           outgoing_frame.id = 0x014;
@@ -126,7 +138,9 @@ void loop() {
         break;
 
         case 'w'://Up
+#ifdef DEBUG_MODE
         Serial.print("Up\n");
+#endif
           remap_vx = 0;
           remap_vy = max_speed;
           remap_wr = 0;
@@ -135,11 +149,13 @@ void loop() {
           motor1_speed = (-sin(to_rad(MOTOR1_DEGREE))*remap_vx)+(cos(to_rad(MOTOR1_DEGREE))*remap_vy)+(1*remap_wr);
           motor2_speed = (-sin(to_rad(MOTOR2_DEGREE))*remap_vx)+(cos(to_rad(MOTOR2_DEGREE))*remap_vy)+(1*remap_wr);
           motor3_speed = (-sin(to_rad(MOTOR3_DEGREE))*remap_vx)+(cos(to_rad(MOTOR3_DEGREE))*remap_vy)+(1*remap_wr);
-
+          
+#ifdef DEBUG_MODE
           Serial.print("Motor1_speed: ");Serial.print(motor1_speed);Serial.print("\n");
           Serial.print("Motor2_speed: ");Serial.print(motor2_speed);Serial.print("\n");
           Serial.print("Motor3_speed: ");Serial.print(motor3_speed);Serial.print("\n");
-      
+#endif    
+
           //Set motor 1
           //module_setSpeed(outgoing_frame, 0x01, motor1_speed);
           outgoing_frame.id = 0x014;
@@ -188,7 +204,9 @@ void loop() {
         break;
 
         case 's'://Down
+#ifdef DEBUG_MODE
         Serial.print("Down\n");
+#endif
           remap_vx = 0;
           remap_vy = -max_speed;
           remap_wr = 0;
@@ -198,10 +216,12 @@ void loop() {
           motor2_speed = (-sin(to_rad(MOTOR2_DEGREE))*remap_vx)+(cos(to_rad(MOTOR2_DEGREE))*remap_vy)+(1*remap_wr);
           motor3_speed = (-sin(to_rad(MOTOR3_DEGREE))*remap_vx)+(cos(to_rad(MOTOR3_DEGREE))*remap_vy)+(1*remap_wr);
 
+#ifdef DEBUG_MODE
           Serial.print("Motor1_speed: ");Serial.print(motor1_speed);Serial.print("\n");
           Serial.print("Motor2_speed: ");Serial.print(motor2_speed);Serial.print("\n");
           Serial.print("Motor3_speed: ");Serial.print(motor3_speed);Serial.print("\n");
-      
+#endif 
+     
           //Set motor 1
           //module_setSpeed(outgoing_frame, 0x01, motor1_speed);
           outgoing_frame.id = 0x014;
@@ -250,7 +270,9 @@ void loop() {
         break;
 
         case 'a'://Left
+#ifdef DEBUG_MODE
         Serial.print("Left\n");
+#endif
           remap_vx = -max_speed;
           remap_vy = 0;
           remap_wr = 0;
@@ -260,10 +282,12 @@ void loop() {
           motor2_speed = (-sin(to_rad(MOTOR2_DEGREE))*remap_vx)+(cos(to_rad(MOTOR2_DEGREE))*remap_vy)+(1*remap_wr);
           motor3_speed = (-sin(to_rad(MOTOR3_DEGREE))*remap_vx)+(cos(to_rad(MOTOR3_DEGREE))*remap_vy)+(1*remap_wr);
 
+#ifdef DEBUG_MODE
           Serial.print("Motor1_speed: ");Serial.print(motor1_speed);Serial.print("\n");
           Serial.print("Motor2_speed: ");Serial.print(motor2_speed);Serial.print("\n");
           Serial.print("Motor3_speed: ");Serial.print(motor3_speed);Serial.print("\n");
-      
+#endif 
+
           //Set motor 1
           //module_setSpeed(outgoing_frame, 0x01, motor1_speed);
           outgoing_frame.id = 0x014;
@@ -312,7 +336,10 @@ void loop() {
         break;
 
         case 'd'://Right
+#ifdef DEBUG_MODE
         Serial.print("Right\n");
+#endif
+
           remap_vx = max_speed;
           remap_vy = 0;
           remap_wr = 0;
@@ -322,10 +349,12 @@ void loop() {
           motor2_speed = (-sin(to_rad(MOTOR2_DEGREE))*remap_vx)+(cos(to_rad(MOTOR2_DEGREE))*remap_vy)+(1*remap_wr);
           motor3_speed = (-sin(to_rad(MOTOR3_DEGREE))*remap_vx)+(cos(to_rad(MOTOR3_DEGREE))*remap_vy)+(1*remap_wr);
 
+#ifdef DEBUG_MODE
           Serial.print("Motor1_speed: ");Serial.print(motor1_speed);Serial.print("\n");
           Serial.print("Motor2_speed: ");Serial.print(motor2_speed);Serial.print("\n");
           Serial.print("Motor3_speed: ");Serial.print(motor3_speed);Serial.print("\n");
-      
+#endif 
+     
           //Set motor 1
           //module_setSpeed(outgoing_frame, 0x01, motor1_speed);
           outgoing_frame.id = 0x014;
@@ -373,8 +402,10 @@ void loop() {
           delay(10);
         break;
 
-        case 'q'://Rotate Anti Clockwise
+        case 'e'://Rotate Anti Clockwise
+#ifdef DEBUG_MODE
         Serial.print("Rotate Anti Clockwise\n");
+#endif
           remap_vx = 0;
           remap_vy = 0;
           remap_wr = -max_speed;
@@ -384,10 +415,12 @@ void loop() {
           motor2_speed = (-sin(to_rad(MOTOR2_DEGREE))*remap_vx)+(cos(to_rad(MOTOR2_DEGREE))*remap_vy)+(1*remap_wr);
           motor3_speed = (-sin(to_rad(MOTOR3_DEGREE))*remap_vx)+(cos(to_rad(MOTOR3_DEGREE))*remap_vy)+(1*remap_wr);
 
+#ifdef DEBUG_MODE
           Serial.print("Motor1_speed: ");Serial.print(motor1_speed);Serial.print("\n");
           Serial.print("Motor2_speed: ");Serial.print(motor2_speed);Serial.print("\n");
           Serial.print("Motor3_speed: ");Serial.print(motor3_speed);Serial.print("\n");
-      
+#endif 
+   
           //Set motor 1
           //module_setSpeed(outgoing_frame, 0x01, motor1_speed);
           outgoing_frame.id = 0x014;
@@ -435,8 +468,11 @@ void loop() {
           delay(10);
         break;
 
-        case 'e'://rotate clockwiare
+        case 'q'://rotate clockwiare
+#ifdef DEBUG_MODE
         Serial.print("rotate clockwiare\n");
+#endif
+
           remap_vx = 0;
           remap_vy = 0;
           remap_wr = max_speed;
@@ -446,10 +482,12 @@ void loop() {
           motor2_speed = (-sin(to_rad(MOTOR2_DEGREE))*remap_vx)+(cos(to_rad(MOTOR2_DEGREE))*remap_vy)+(1*remap_wr);
           motor3_speed = (-sin(to_rad(MOTOR3_DEGREE))*remap_vx)+(cos(to_rad(MOTOR3_DEGREE))*remap_vy)+(1*remap_wr);
 
+#ifdef DEBUG_MODE
           Serial.print("Motor1_speed: ");Serial.print(motor1_speed);Serial.print("\n");
           Serial.print("Motor2_speed: ");Serial.print(motor2_speed);Serial.print("\n");
           Serial.print("Motor3_speed: ");Serial.print(motor3_speed);Serial.print("\n");
-      
+#endif 
+
           //Set motor 1
           //module_setSpeed(outgoing_frame, 0x01, motor1_speed);
           outgoing_frame.id = 0x014;
@@ -500,76 +538,6 @@ void loop() {
         
       }
     }
-#else
-  if(mega_serial.available()){
-    //Receive Controller Command
-    mega_serial.readBytes(reinterpret_cast<char *>(&mega_serialFrame), sizeof(Speed_cmd));
-
-#ifdef DEBUG_MODE
-    Serial.print("Receive PS4");
-#endif
-
-    //Start
-    int motor1_speed = 0;
-    int motor2_speed = 0;
-    int motor3_speed = 0;
-
-    int remap_vx = 0;
-    int remap_vy = 0;
-    int remap_wr = 0;
-
-    switch(mega_serialFrame.cmd){
-    case 0x0:
-      //Stop
-    break;  
-    
-    
-    //Command Move
-    case 0x1:
-      remap_vx = map(mega_serialFrame.vx, 0, 255, -max_speed, max_speed);
-      remap_vy = map(mega_serialFrame.vy, 255, 0, -max_speed, max_speed);
-      remap_wr = map(mega_serialFrame.wr, 0, 255, -max_speed, max_speed);
-      
-      //Compute calculation
-      motor1_speed = (-sin(to_rad(MOTOR1_DEGREE))*remap_vx)+(cos(to_rad(MOTOR1_DEGREE))*remap_vy)+(1*remap_wr);
-      motor2_speed = (-sin(to_rad(MOTOR2_DEGREE))*remap_vx)+(cos(to_rad(MOTOR2_DEGREE))*remap_vy)+(1*remap_wr);
-      motor3_speed = (-sin(to_rad(MOTOR3_DEGREE))*remap_vx)+(cos(to_rad(MOTOR3_DEGREE))*remap_vy)+(1*remap_wr);
-  
-      
-  
-       
-      //Set motor 1
-      module_setSpeed(outgoing_frame, 0x01, motor1_speed);
-      Can0.sendFrame(outgoing_frame);
-      delay(10);
-      //Set motor 2
-      module_setSpeed(outgoing_frame, 0x02, motor2_speed);
-      Can0.sendFrame(outgoing_frame);
-      delay(10);
-      //Set motor 3
-      module_setSpeed(outgoing_frame, 0x03, motor3_speed);
-      Can0.sendFrame(outgoing_frame);
-      delay(10);
-    break;
-
-    case 0x2:
-      //Decrease speed 
-      if(max_speed-100 >0)
-        max_speed -=100;
-      else
-        max_speed = 0;
-    break;  
-
-    case 0x3:
-      //Increase speed
-      if(max_speed+100 > 5000)
-        max_speed +=100;
-      else
-        max_speed = 5000;
-    break;  
-    }//END-Switch Case
-  }//END-Mega Serial
-#endif
 
 }
 
