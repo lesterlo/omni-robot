@@ -1,4 +1,4 @@
-#include "robomodule_lib.h"
+#include "robomodule_direct_lib.h"
 #include "commu_data_exchange.h"
 #include "due_can.h"
 
@@ -34,20 +34,17 @@ void setup() {
   Can0.begin(CAN_BPS_1000K); //Setup CAN bus
 
   pinMode(CANBUS_ENABLE_PIN, OUTPUT);
-  digitalWrite(CANBUS_ENABLE_PIN, LOW);
+  digitalWrite(CANBUS_ENABLE_PIN, LOW); //Enable the CANBUS chip
 
 
   
   //CAN buss setip
-  module_reset(outgoing_frame, 0x0); //Reset all connected module 
-  Can0.sendFrame(outgoing_frame);
+  reset_module(0x0);
   delay(500);
   
-  module_setMode(outgoing_frame, 0x0, SPEED_MODE); //Set Mode
-  Can0.sendFrame(outgoing_frame);
+  module_setSpeedMode(0x0); //Set Mode
   delay(500);
 
-  set_Max_PWM(5000);
 }
 
 void loop() {
@@ -106,47 +103,10 @@ void loop() {
   
        
       //Set motor 1
-      outgoing_frame.id =  0x014;
-      outgoing_frame.length = 8;
-      
-      outgoing_frame.data.byte[0] = (unsigned char) ((pwm_speed >>8) & 0xff);
-      outgoing_frame.data.byte[1] = (unsigned char) ( pwm_speed & 0xff);
-      outgoing_frame.data.byte[2] = (unsigned char) ((motor1_speed>>8) & 0xff);
-      outgoing_frame.data.byte[3] = (unsigned char) (motor1_speed  & 0xff);
-      outgoing_frame.data.byte[4] = 0x55;
-      outgoing_frame.data.byte[5] = 0x55;
-      outgoing_frame.data.byte[6] = 0x55;
-      outgoing_frame.data.byte[7] = 0x55;
-      Can0.sendFrame(outgoing_frame);
-      delay(10);
-      //Set motor 2
-      outgoing_frame.id =  0x024;
-      outgoing_frame.length = 8;
-      
-      outgoing_frame.data.byte[0] = (unsigned char) ((pwm_speed >>8) & 0xff);
-      outgoing_frame.data.byte[1] = (unsigned char) ( pwm_speed & 0xff);
-      outgoing_frame.data.byte[2] = (unsigned char) ((motor2_speed>>8) & 0xff);
-      outgoing_frame.data.byte[3] = (unsigned char) (motor2_speed  & 0xff);
-      outgoing_frame.data.byte[4] = 0x55;
-      outgoing_frame.data.byte[5] = 0x55;
-      outgoing_frame.data.byte[6] = 0x55;
-      outgoing_frame.data.byte[7] = 0x55;
-      Can0.sendFrame(outgoing_frame);
-      delay(10);
-      //Set motor 3
-      outgoing_frame.id =  0x034;
-      outgoing_frame.length = 8;
-      
-      outgoing_frame.data.byte[0] = (unsigned char) ((pwm_speed >>8) & 0xff);
-      outgoing_frame.data.byte[1] = (unsigned char) ( pwm_speed & 0xff);
-      outgoing_frame.data.byte[2] = (unsigned char) ((motor3_speed>>8) & 0xff);
-      outgoing_frame.data.byte[3] = (unsigned char) (motor3_speed  & 0xff);
-      outgoing_frame.data.byte[4] = 0x55;
-      outgoing_frame.data.byte[5] = 0x55;
-      outgoing_frame.data.byte[6] = 0x55;
-      outgoing_frame.data.byte[7] = 0x55;
-      Can0.sendFrame(outgoing_frame);
-      delay(10);
+      motor1_setSpeed(pwm_speed, motor1_speed);
+      motor2_setSpeed(pwm_speed, motor2_speed);
+      motor3_setSpeed(pwm_speed, motor3_speed);
+     
     break;
 
     case 0x2:
@@ -168,6 +128,8 @@ void loop() {
   }//END-Mega Serial
 
 }
+
+
 
 inline int to_rad(int in_degree){
   return (in_degree*(PI/180));

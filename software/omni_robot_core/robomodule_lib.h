@@ -58,8 +58,8 @@ void set_Max_PWM(short in_value){
   max_PWM = in_value;
 }
 
-void module_setSpeed(CAN_FRAME& can_frame, uint16_t can_id, int input_Velocity){
-  can_frame.id = (can_id << 8) + 0x4;
+void module_setSpeed(CAN_FRAME& can_frame, uint16_t can_id, uint16_t input_Velocity){
+  can_frame.id = (can_id << 8) | 0x4;
   can_frame.length = 8;
   
   can_frame.data.byte[0] = (unsigned char) ((max_PWM >>8) & 0xff);
