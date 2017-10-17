@@ -9,7 +9,7 @@
  */
 #include "commu_data_exchange.h"
 
-#define DEBUG_MODE
+//#define DEBUG_MODE
  
 HardwareSerial &due_Serial = Serial3;
 
@@ -63,7 +63,7 @@ void setup() {
     while (1); // Halt
   }
   
-  PS4.setLed(Red);
+  //PS4.setLed(Red);
 
 
 }
@@ -77,38 +77,29 @@ void loop() {
     prev_char = send_char;
     send_char = 'c';
   
-  //Hat Control
-    int leftHatX_value = PS4.getAnalogHat(LeftHatX);
-    int leftHatY_value = PS4.getAnalogHat(LeftHatY);
-    int rightHatX_value = PS4.getAnalogHat(RightHatX);
-    int rightHatY_value = PS4.getAnalogHat(RightHatY);
+ 
 
     //Left Hat X-axis
-    if(leftHatX_value < ps4_LeftHatX_deadLow){
+    if(PS4.getButtonPress(LEFT))
       send_char = 'a';
-      
-    }else if(leftHatX_value > ps4_LeftHatX_deadHigh){
+    if(PS4.getButtonPress(RIGHT))
       send_char = 'd';
-    }
-    //Left Hat Y-axis
-    if(leftHatY_value < ps4_LeftHatY_deadLow){
+    if(PS4.getButtonPress(UP))
       send_char = 'w';
-    }else if(leftHatY_value > ps4_LeftHatX_deadHigh){
+    if(PS4.getButtonPress(DOWN))
       send_char = 's';
-    }
-    //Right Hat Y-axis
-    if(rightHatX_value < ps4_RightHatX_deadLow){
+    if(PS4.getButtonPress(SQUARE))
       send_char = 'q';
-    }else if(rightHatX_value > ps4_RightHatX_deadHigh){
+    if(PS4.getButtonPress(CIRCLE))
       send_char = 'e';
-    }
     
-
 
     //Finally send command
     if(prev_char != send_char){
       due_Serial.print(send_char);
+#ifdef DEBUG_MODE
       Serial.print(send_char);
+#endif
     }
     
     //Disconnect
