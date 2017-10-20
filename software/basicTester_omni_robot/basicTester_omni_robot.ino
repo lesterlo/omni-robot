@@ -15,12 +15,17 @@ const int MOTOR3_DEGREE = 240+VECTOR_DIRECTION;
 
 const int CANBUS_ENABLE_PIN = 23;
 
+const int SPEED_INCREASE_INTERVAL = 200;
+const int RESET_SPEED = 300;
+const int MAX_SPEED = 4000;
+const int MIN_SPEED = 50;
 
 CAN_FRAME outgoing_frame;
 Speed_cmd mega_serialFrame;
 
+int speed_var = RESET_SPEED;
 
-int max_speed = 300;
+
 
 //Variable
 
@@ -142,7 +147,7 @@ void loop() {
         Serial.print("Up\n");
 #endif
           remap_vx = 0;
-          remap_vy = max_speed;
+          remap_vy = speed_var;
           remap_wr = 0;
           
           //Compute calculation
@@ -208,7 +213,7 @@ void loop() {
         Serial.print("Down\n");
 #endif
           remap_vx = 0;
-          remap_vy = -max_speed;
+          remap_vy = -speed_var;
           remap_wr = 0;
           
           //Compute calculation
@@ -273,7 +278,7 @@ void loop() {
 #ifdef DEBUG_MODE
         Serial.print("Left\n");
 #endif
-          remap_vx = -max_speed;
+          remap_vx = -speed_var;
           remap_vy = 0;
           remap_wr = 0;
           
@@ -340,7 +345,7 @@ void loop() {
         Serial.print("Right\n");
 #endif
 
-          remap_vx = max_speed;
+          remap_vx = speed_var;
           remap_vy = 0;
           remap_wr = 0;
           
@@ -408,7 +413,7 @@ void loop() {
 #endif
           remap_vx = 0;
           remap_vy = 0;
-          remap_wr = -max_speed;
+          remap_wr = -speed_var;
           
           //Compute calculation
           motor1_speed = (-sin(to_rad(MOTOR1_DEGREE))*remap_vx)+(cos(to_rad(MOTOR1_DEGREE))*remap_vy)+(1*remap_wr);
@@ -475,7 +480,7 @@ void loop() {
 
           remap_vx = 0;
           remap_vy = 0;
-          remap_wr = max_speed;
+          remap_wr = speed_var;
           
           //Compute calculation
           motor1_speed = (-sin(to_rad(MOTOR1_DEGREE))*remap_vx)+(cos(to_rad(MOTOR1_DEGREE))*remap_vy)+(1*remap_wr);
@@ -534,6 +539,25 @@ void loop() {
           Can0.sendFrame(outgoing_frame);
           delay(10);
         break;
+
+        case 'o': //Increase Speed
+          if((speed_var+SPEED_INCREASE_INTERVAL) >= MAX_SPEED)
+            speed_var = MAX_SPEED;
+          else
+            speed_var += SPEED_INCREASE_INTERVAL;
+          break;
+
+        case 'p': //Decrease Speed
+          if((speed_var-SPEED_INCREASE_INTERVAL) <= MIN_SPEED)
+            speed_var = MIN_SPEED;
+          else
+            speed_var -= SPEED_INCREASE_INTERVAL;
+          break;
+
+        case 'l': //Reset Speed
+          speed_var = RESET_SPEED;
+
+          break;
 
         
       }

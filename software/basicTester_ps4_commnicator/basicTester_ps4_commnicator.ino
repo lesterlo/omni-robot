@@ -92,6 +92,13 @@ void loop() {
       send_char = 'q';
     if(PS4.getButtonPress(CIRCLE))
       send_char = 'e';
+    if(PS4.getButtonPress(R1))
+      send_char = 'o';
+    if(PS4.getButtonPress(L1))
+      send_char = 'p';
+    if(PS4.getButtonPress(TOUCHPAD))
+      send_char = 'l';
+      
     
 
     //Finally send command
