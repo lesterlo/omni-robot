@@ -38,7 +38,7 @@ void setup() {
 
 
   
-  //CAN buss setip
+  //CAN bus setup
   reset_module(0x0);
   delay(500);
   
