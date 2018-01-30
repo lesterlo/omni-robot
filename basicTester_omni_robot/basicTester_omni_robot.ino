@@ -2,7 +2,7 @@
 #include "commu_data_exchange.h"
 #include "due_can.h"
 
-//#define DEBUG_MODE
+#define DEBUG_MODE
 
 
 
