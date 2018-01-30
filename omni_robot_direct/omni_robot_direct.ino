@@ -9,9 +9,6 @@
 #define WHEEL_DIAMETER 0.25
 #define MS2RPM(IN_SPEED) (int)((IN_SPEED*60/(2*PI*WHEEL_DIAMETER))*10) //Multiplier
 
-//Pin Define
-const int CANBUS_ENABLE_PIN = 23;
-
 //Const Value
 const int ROBOT_FRONT_VECTOR = 90;
 
@@ -31,11 +28,18 @@ const int MOTOR2_DEGREE = 120+ROBOT_FRONT_VECTOR;
 const int MOTOR3_DEGREE = 240+ROBOT_FRONT_VECTOR;
 
 //MOTOR Driver Setting
+const int WR_SPEED_DIVIDER = 2; //Reduce the rotation speed
+const int VX_SPEED_DIVIDER = 1; //Reduct the X-axis speed
+const int VY_SPEED_DIVIDER = 1; //Reduct the Y-axis speed
+
 const int MAX_PWM = 5000;
 const int MAX_RPM = 2000;
 const int DEFAULT_RPM = 500;
 
 const int SPEED_CHANGE_INV = 100;
+
+//Pin Define
+const int CANBUS_ENABLE_PIN = 23;
 
 //Include Library
 #include "robomodule_direct_lib.h"
@@ -135,7 +139,9 @@ void loop()
     //2.3d - useless
     //if(rightHatY > PS4_RIGHTY_UPPER_DZ || rightHatY < PS4_RIGHTY_LOWER_DZ )
 
-     
+    remap_vx /= VX_SPEED_DIVIDER;
+    remap_vy /= VY_SPEED_DIVIDER;
+    remap_wr /= WR_SPEED_DIVIDER;
     //3 - Matrix calculation
     motor1_speed = (-sin(TO_RAD(MOTOR1_DEGREE))*remap_vx)+(cos(TO_RAD(MOTOR1_DEGREE))*remap_vy)+(1*remap_wr);
     motor2_speed = (-sin(TO_RAD(MOTOR2_DEGREE))*remap_vx)+(cos(TO_RAD(MOTOR2_DEGREE))*remap_vy)+(1*remap_wr);
