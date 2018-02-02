@@ -1,73 +1,12 @@
 /*
  * CUHK CSE Omni Robot Control System
- * v1.3
+ * v1.4
  * Author: Lo Sheung Lai (Lester)
  * 
  * This program is a main control program of the CSE 3 omni wheel robot. It's receive the control signal form the PS4 Controller
  * Please upload it to arduino due with the Omni Robot Control Board
  */
- 
-//#define DEBUG_MODE
-
-
-#define TO_RAD(IN_DEGREE)(IN_DEGREE*(PI/180))
-#define WHEEL_DIAMETER 0.25
-#define MS2RPM(IN_SPEED) (int)((IN_SPEED*60/(2*PI*WHEEL_DIAMETER))*10) //Multiplier
-
-//Const Value
-const int ROBOT_FRONT_VECTOR = -30;//Prefect Number!! away from the motor in 90 degree anti clockwise
-
-//Controller Setting
-const int PS4_LEFTX_UPPER_DZ = 137; 
-const int PS4_LEFTX_LOWER_DZ = 117;
-const int PS4_LEFTY_UPPER_DZ = 137; 
-const int PS4_LEFTY_LOWER_DZ = 117;
-const int PS4_RIGHTX_UPPER_DZ = 137; 
-const int PS4_RIGHTX_LOWER_DZ = 117;
-const int PS4_RIGHTY_UPPER_DZ = 137; 
-const int PS4_RIGHTY_LOWER_DZ = 117;
-const int PS4_HAT_MAX_VAL = 254;
-const int PS4_HAT_MIN_VAL = 1;
-
-//Motor Seperation
-const int MOTOR1_DEGREE = 0+ROBOT_FRONT_VECTOR;
-const int MOTOR2_DEGREE = 120+ROBOT_FRONT_VECTOR;
-const int MOTOR3_DEGREE = 240+ROBOT_FRONT_VECTOR;
-
-//MOTOR Driver Setting
-//const int WR_SPEED_DIVIDER = 1; //Reduce the rotation speed
-//const int VX_SPEED_DIVIDER = 1; //Reduct the X-axis speed
-//const int VY_SPEED_DIVIDER = 1; //Reduct the Y-axis speed
-//const int MOTOR_SPEED_DIVIDER = 1; //Reduct the Y-axis speed
-
-const int MAX_PWM = 5000;
-const int MAX_RPM = 2000;
-const int MIN_RPM = 50;
-const int DEFAULT_RPM = 500;
-const int SPEED_CHANGE_INV = 150;
-const int SPEED_ACCEL_INV = 2;
-
-//Pin Define
-const int CANBUS_ENABLE_PIN = 23;
-
-//Include Library
-#include "robomodule_direct_lib.h"
-#include "due_can.h"
-//USB host sheild 2.0 library include
-#include <PS4BT.h>
-#include <usbhub.h>
-#ifdef dobogusinclude
-#include <spi4teensy3.h>
-#endif
-#include <SPI.h>
-USB Usb;
-//USBHub Hub1(&Usb); // Some dongles have a hub inside
-BTD Btd(&Usb); // You have to create the Bluetooth Dongle instance like so
-PS4BT PS4(&Btd);
-
-//Include due timer
-#include <DueTimer.h>
-
+#include "omni_robot_config.h"
 //Global Variable, don't touch
 volatile int pwm_speed = MAX_PWM;
 int cur_speed = DEFAULT_RPM;
@@ -89,6 +28,21 @@ volatile int motor1_speed = 0;
 volatile int motor2_speed = 0;
 volatile int motor3_speed = 0;
 
+#ifdef CAL_LUT_MODE
+const int PRECISION_MULTIPYER = 1000;
+static int lut_motor_sin[3];
+static int lut_motor_cos[3];
+void compute_lut(){
+    //sin port
+    lut_motor_sin[0] = (-sin(TO_RAD(MOTOR1_DEGREE)))*PRECISION_MULTIPYER;
+    lut_motor_sin[1] = (-sin(TO_RAD(MOTOR2_DEGREE)))*PRECISION_MULTIPYER;
+    lut_motor_sin[2] = (-sin(TO_RAD(MOTOR3_DEGREE)))*PRECISION_MULTIPYER;
+    //cos part
+    lut_motor_cos[0] = cos(TO_RAD(MOTOR1_DEGREE))*PRECISION_MULTIPYER;
+    lut_motor_cos[1] = cos(TO_RAD(MOTOR2_DEGREE))*PRECISION_MULTIPYER;
+    lut_motor_cos[2] = cos(TO_RAD(MOTOR3_DEGREE))*PRECISION_MULTIPYER; 
+}
+#endif
 
 void send_MotorData(){ //Call every 1ms
   motor1_setSpeed(pwm_speed, motor1_speed);
@@ -135,6 +89,10 @@ void setup() {
 //Setup Timer
   Timer3.attachInterrupt(send_MotorData);
   Timer3.start(1000); // Calls every 1ms
+
+#ifdef CAL_LUT_MODE
+  compute_lut();
+#endif
 }
 void loop() 
 {
@@ -147,16 +105,16 @@ void loop()
     r2ButVal = PS4.getAnalogButton(R2);
     l2ButVal = PS4.getAnalogButton(L2);
     if(r2ButVal){
-      speed_adder_r2 = r2ButVal;
+      speed_adder_r2 = r2ButVal*SPEED_ACCEL_INV;
     }else {
       speed_adder_r2 = 0;
     }
     if(l2ButVal){
-      speed_adder_l2 = l2ButVal*SPEED_ACCEL_INV;
+      speed_adder_l2 = -(l2ButVal*SPEED_ACCEL_INV);
     }else {
       speed_adder_l2 = 0;
     }
-    speed_adder = speed_adder_l2+speed_adder_r2;
+    speed_adder = speed_adder_l2+speed_adder_r2; //Max 2 button value
     //Get Joystick Position Value
     leftHatX = PS4.getAnalogHat(LeftHatX);
     leftHatY = PS4.getAnalogHat(LeftHatY);
@@ -237,9 +195,15 @@ void loop()
   {
     //4 - Matrix calculation
     noInterrupts(); //Critical State, must complete all of the calculate before the interrupt called
+#ifdef CAL_LUT_MODE
+    motor1_speed = (lut_motor_sin[0] * remap_vx / PRECISION_MULTIPYER)+(lut_motor_cos[0]*remap_vy / PRECISION_MULTIPYER)+ remap_wr;
+    motor2_speed = (lut_motor_sin[1] * remap_vx / PRECISION_MULTIPYER)+(lut_motor_cos[1]*remap_vy / PRECISION_MULTIPYER)+ remap_wr;
+    motor3_speed = (lut_motor_sin[2] * remap_vx / PRECISION_MULTIPYER)+(lut_motor_cos[2]*remap_vy / PRECISION_MULTIPYER)+ remap_wr; 
+#else    
     motor1_speed = (-sin(TO_RAD(MOTOR1_DEGREE))*remap_vx)+(cos(TO_RAD(MOTOR1_DEGREE))*remap_vy)+(1*remap_wr);
     motor2_speed = (-sin(TO_RAD(MOTOR2_DEGREE))*remap_vx)+(cos(TO_RAD(MOTOR2_DEGREE))*remap_vy)+(1*remap_wr);
     motor3_speed = (-sin(TO_RAD(MOTOR3_DEGREE))*remap_vx)+(cos(TO_RAD(MOTOR3_DEGREE))*remap_vy)+(1*remap_wr);
+#endif
     interrupts();
   }
   
