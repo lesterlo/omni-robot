@@ -1,5 +1,7 @@
 /*
  * CUHK CSE Omni Robot Control System
+ * v1.3
+ * Author: Lo Sheung Lai (Lester)
  * 
  * This program is a main control program of the CSE 3 omni wheel robot. It's receive the control signal form the PS4 Controller
  * Please upload it to arduino due with the Omni Robot Control Board
@@ -24,6 +26,8 @@ const int PS4_RIGHTX_UPPER_DZ = 137;
 const int PS4_RIGHTX_LOWER_DZ = 117;
 const int PS4_RIGHTY_UPPER_DZ = 137; 
 const int PS4_RIGHTY_LOWER_DZ = 117;
+const int PS4_HAT_MAX_VAL = 254;
+const int PS4_HAT_MIN_VAL = 1;
 
 //Motor Seperation
 const int MOTOR1_DEGREE = 0+ROBOT_FRONT_VECTOR;
@@ -31,16 +35,17 @@ const int MOTOR2_DEGREE = 120+ROBOT_FRONT_VECTOR;
 const int MOTOR3_DEGREE = 240+ROBOT_FRONT_VECTOR;
 
 //MOTOR Driver Setting
-const int WR_SPEED_DIVIDER = 2; //Reduce the rotation speed
-const int VX_SPEED_DIVIDER = 1; //Reduct the X-axis speed
-const int VY_SPEED_DIVIDER = 1; //Reduct the Y-axis speed
+//const int WR_SPEED_DIVIDER = 1; //Reduce the rotation speed
+//const int VX_SPEED_DIVIDER = 1; //Reduct the X-axis speed
+//const int VY_SPEED_DIVIDER = 1; //Reduct the Y-axis speed
+//const int MOTOR_SPEED_DIVIDER = 1; //Reduct the Y-axis speed
 
 const int MAX_PWM = 5000;
 const int MAX_RPM = 2000;
 const int MIN_RPM = 50;
 const int DEFAULT_RPM = 500;
-
 const int SPEED_CHANGE_INV = 150;
+const int SPEED_ACCEL_INV = 2;
 
 //Pin Define
 const int CANBUS_ENABLE_PIN = 23;
@@ -71,12 +76,19 @@ int cur_speed = DEFAULT_RPM;
 int remap_vx = 0;
 int remap_vy = 0;
 int remap_wr = 0;
+int speed_adder = 0;
+int speed_adder_l2 = 0;
+int speed_adder_r2 = 0;
+//ps4 value
 int leftHatX = 0;
 int leftHatY = 0;
 int rightHatX = 0;
+int l2ButVal = 0;
+int r2ButVal = 0;
 volatile int motor1_speed = 0;
 volatile int motor2_speed = 0;
 volatile int motor3_speed = 0;
+
 
 void send_MotorData(){ //Call every 1ms
   motor1_setSpeed(pwm_speed, motor1_speed);
@@ -132,38 +144,53 @@ void loop()
   if (PS4.connected())
   {
     //2.1 - Get PS4 Controller input
+    r2ButVal = PS4.getAnalogButton(R2);
+    l2ButVal = PS4.getAnalogButton(L2);
+    if(r2ButVal){
+      speed_adder_r2 = r2ButVal;
+    }else {
+      speed_adder_r2 = 0;
+    }
+    if(l2ButVal){
+      speed_adder_l2 = l2ButVal*SPEED_ACCEL_INV;
+    }else {
+      speed_adder_l2 = 0;
+    }
+    speed_adder = speed_adder_l2+speed_adder_r2;
     //Get Joystick Position Value
     leftHatX = PS4.getAnalogHat(LeftHatX);
     leftHatY = PS4.getAnalogHat(LeftHatY);
     rightHatX = PS4.getAnalogHat(RightHatX);
     //int rightHatY = PS4.getAnalogHat(RightHatY);
     //2.2 Check valid control action
-    //2.3a - Robot X-axis speed
+    //2.3a - Robot X-axis speed  
     if(leftHatX > PS4_LEFTX_UPPER_DZ || leftHatX  < PS4_LEFTX_LOWER_DZ) //Check the pointer is out of the DeadZone
     {
-      remap_vx = map(leftHatX, 255, 0, -cur_speed, cur_speed); //Flip the Axis direction
-      remap_vx /= VX_SPEED_DIVIDER;//Reduce the value
+      remap_vx = map(leftHatX, PS4_HAT_MAX_VAL, PS4_HAT_MIN_VAL, -(cur_speed+speed_adder), (cur_speed+speed_adder)); //Flip the Axis direction
+      //remap_vx = map(leftHatX, PS4_HAT_MIN_VAL, PS4_HAT_MAX_VAL, -cur_speed, cur_speed); 
+      //remap_vx /= VX_SPEED_DIVIDER;//Reduce the value
     }else
     {
-      remap_vx = 127;//Stop Move
+      remap_vx = 0;//Stop Move
     }
     //2.3b - Robot Y-axis speed 
     if(leftHatY > PS4_LEFTY_UPPER_DZ || leftHatY < PS4_LEFTX_LOWER_DZ) //Check the pointer is out of the DeadZone
     {
-      remap_vy = map(leftHatY, 0, 255, -cur_speed, cur_speed);//No need to Flip
-      remap_vy /= VY_SPEED_DIVIDER;//Reduce the value
+      remap_vy = map(leftHatY, PS4_HAT_MIN_VAL, PS4_HAT_MAX_VAL, -(cur_speed+speed_adder), (cur_speed+speed_adder));//No need to Flip
+      //remap_vy /= VY_SPEED_DIVIDER;//Reduce the value
     }else
     {
-      remap_vy = 127;//Stop Move
+      remap_vy = 0;//Stop Move
     }
     //2.3c - Robot Rotation speed  
     if(rightHatX > PS4_RIGHTX_UPPER_DZ || rightHatX < PS4_RIGHTX_LOWER_DZ) //Check the pointer is out of the DeadZone
     {
-      remap_wr = map(rightHatX, 255, 0, -cur_speed, cur_speed);//Flip the Axis direction
-      remap_wr /= WR_SPEED_DIVIDER;//Reduce the value
+      remap_wr = map(rightHatX, PS4_HAT_MAX_VAL, PS4_HAT_MIN_VAL, -(cur_speed+speed_adder), (cur_speed+speed_adder));//Flip the Axis direction
+      //remap_wr = map(rightHatX, PS4_HAT_MIN_VAL, PS4_HAT_MAX_VAL, -cur_speed, cur_speed);
+      //remap_wr /= WR_SPEED_DIVIDER;//Reduce the value
     }else
     {
-      remap_wr = 127; 
+      remap_wr = 0; 
     }
     //2.3d - useless
     //if(rightHatY > PS4_RIGHTY_UPPER_DZ || rightHatY < PS4_RIGHTY_LOWER_DZ )
@@ -199,7 +226,7 @@ void loop()
   //3 - Compute Logic
 
   //ignore the motor speed matrix calculation when it should stop
-  if(remap_vx == 127 && remap_vy == 127 && remap_wr == 127)
+  if(remap_vx == 0 && remap_vy == 0 && remap_wr == 0)
   {
     noInterrupts();//Critical State, must complete all of the calculate before the interrupt called
     motor1_speed = 0;
@@ -217,12 +244,19 @@ void loop()
   }
   
 #ifdef DEBUG_MODE
-  Serial3.print("Motor 1: ");
+  Serial3.print("vx: ");
+  Serial3.println(remap_vx);
+  Serial3.print("vy ");
+  Serial3.println(remap_vy);
+  Serial3.print("wr: ");
+  Serial3.println(remap_wr);
+  Serial3.print("M1: ");
   Serial3.println(motor1_speed);
-  Serial3.print("Motor 2: ");
+  Serial3.print("M2: ");
   Serial3.println(motor2_speed);
-  Serial3.print("Motor 3: ");
+  Serial3.print("M3: ");
   Serial3.println(motor3_speed);
+  Serial3.println(" ");
 #endif
   //Send the motor signal, in polling
 //  motor1_setSpeed(pwm_speed, motor1_speed);
