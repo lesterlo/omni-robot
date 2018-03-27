@@ -14,16 +14,11 @@
 #define OMNI_ROBOT_CONFIG_H
 
 //Build option
-//#define DEBUG_MODE
-#define CAL_LUT_MODE
-
-//Marco Function
-#define TO_RAD(IN_DEGREE) (IN_DEGREE*(PI/180))
-#define WHEEL_DIAMETER 0.25
-#define MS2RPM(IN_SPEED) (int)((IN_SPEED*60/(2*PI*WHEEL_DIAMETER))*10) //Multiplier
+//#define DEBUG_MODE //Show Debuf print
+#define CAL_LUT_MODE //Use Look Up table (faster)
 
 //Const Value
-const int ROBOT_FRONT_VECTOR = -30;//Prefect Number!! away from the motor in 90 degree anti clockwise
+const int ROBOT_FRONT_VECTOR = -30;//(-30)Prefect Number!! away from the motor in 90 degree anti clockwise
 
 //Controller Setting
 const int PS4_LEFTX_UPPER_DZ = 137; 
@@ -48,8 +43,8 @@ const int MOTOR3_DEGREE = 240+ROBOT_FRONT_VECTOR;
 //const int VY_SPEED_DIVIDER = 1; //Reduct the Y-axis speed
 //const int MOTOR_SPEED_DIVIDER = 1; //Reduct the Y-axis speed
 
-const int MAX_PWM = 5000;
-const int MAX_RPM = 2000;
+const int MAX_PWM = 5000; //Set The max pwm rate, usually 5000
+const int MAX_RPM = 4000; //Set the wheel max rpm rate
 const int MIN_RPM = 50;
 const int DEFAULT_RPM = 500;
 const int SPEED_CHANGE_INV = 150;
@@ -57,6 +52,11 @@ const int SPEED_ACCEL_INV = 2;
 
 //Pin Define
 const int CANBUS_ENABLE_PIN = 23;
+
+//Marco Function
+#define TO_RAD(IN_DEGREE) (IN_DEGREE*(PI/180))
+//#define WHEEL_DIAMETER 0.25
+//#define MS2RPM(IN_SPEED) (int)((IN_SPEED*60/(2*PI*WHEEL_DIAMETER))*10) //Multiplier
 
 //Include Library
 #include "robomodule_direct_lib.h"

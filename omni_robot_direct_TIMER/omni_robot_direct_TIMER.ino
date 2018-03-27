@@ -5,6 +5,12 @@
  * 
  * This program is a main control program of the CSE 3 omni wheel robot. It's receive the control signal form the PS4 Controller
  * Please upload it to arduino due with the Omni Robot Control Board
+ * 
+ * Pleas install the following dependencies
+ * 1. Arduino Due board (Tested on 1.6.11)
+ * 2. due_can (Tested on 2.0.1)
+ * 3. DueTimer (Tested on 1.4.7)
+ * 4. USB Host Shield 2.0 (Tested on 1.3.2)
  */
 #include "omni_robot_config.h"
 //Global Variable, don't touch
@@ -102,19 +108,20 @@ void loop()
   if (PS4.connected())
   {
     //2.1 - Get PS4 Controller input
-    r2ButVal = PS4.getAnalogButton(R2);
+    r2ButVal = PS4.getAnalogButton(R2); //Boost button
     l2ButVal = PS4.getAnalogButton(L2);
-    if(r2ButVal){
-      speed_adder_r2 = r2ButVal*SPEED_ACCEL_INV;
+    if(r2ButVal){// Value >0
+      speed_adder_r2 = r2ButVal*SPEED_ACCEL_INV;//Add speed
     }else {
       speed_adder_r2 = 0;
     }
-    if(l2ButVal){
-      speed_adder_l2 = -(l2ButVal*SPEED_ACCEL_INV);
+    if(l2ButVal){// Value >0
+      speed_adder_l2 = -(l2ButVal*SPEED_ACCEL_INV);//Subtract speed
     }else {
       speed_adder_l2 = 0;
     }
     speed_adder = speed_adder_l2+speed_adder_r2; //Max 2 button value
+    
     //Get Joystick Position Value
     leftHatX = PS4.getAnalogHat(LeftHatX);
     leftHatY = PS4.getAnalogHat(LeftHatY);
@@ -124,7 +131,10 @@ void loop()
     //2.3a - Robot X-axis speed  
     if(leftHatX > PS4_LEFTX_UPPER_DZ || leftHatX  < PS4_LEFTX_LOWER_DZ) //Check the pointer is out of the DeadZone
     {
+      //NormalSpeed Map
       remap_vx = map(leftHatX, PS4_HAT_MAX_VAL, PS4_HAT_MIN_VAL, -(cur_speed+speed_adder), (cur_speed+speed_adder)); //Flip the Axis direction
+
+      //Speed Divided Map
       //remap_vx = map(leftHatX, PS4_HAT_MIN_VAL, PS4_HAT_MAX_VAL, -cur_speed, cur_speed); 
       //remap_vx /= VX_SPEED_DIVIDER;//Reduce the value
     }else
@@ -181,19 +191,21 @@ void loop()
         PS4.setLedFlash(0, 0); // Turn off blinking
       }
   }//END-2
-  //3 - Compute Logic
 
-  //ignore the motor speed matrix calculation when it should stop
+  
+  //3 - Compute Logic
   if(remap_vx == 0 && remap_vy == 0 && remap_wr == 0)
   {
+    //ignore the motor speed matrix calculation when it should stop (speed=0)
     noInterrupts();//Critical State, must complete all of the calculate before the interrupt called
     motor1_speed = 0;
     motor2_speed = 0;
     motor3_speed = 0;
     interrupts();
-  }else
+  }
+  else
   {
-    //4 - Matrix calculation
+    //Matrix calculation
     noInterrupts(); //Critical State, must complete all of the calculate before the interrupt called
 #ifdef CAL_LUT_MODE
     motor1_speed = (lut_motor_sin[0] * remap_vx / PRECISION_MULTIPYER)+(lut_motor_cos[0]*remap_vy / PRECISION_MULTIPYER)+ remap_wr;
@@ -205,7 +217,7 @@ void loop()
     motor3_speed = (-sin(TO_RAD(MOTOR3_DEGREE))*remap_vx)+(cos(TO_RAD(MOTOR3_DEGREE))*remap_vy)+(1*remap_wr);
 #endif
     interrupts();
-  }
+  }//END-3
   
 #ifdef DEBUG_MODE
   Serial3.print("vx: ");
