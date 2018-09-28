@@ -23,8 +23,8 @@ void setup() {
 
   Serial.begin(115200);
   Serial.print("Program Start\n");
-  Serial.print("Min: 50us \t Max: 2900us \t Neu: 1700 us \n");
-  Serial.print("Normal: 900 - 2100 \n");
+  Serial.print("Min: 1000 us \t Max: 1500us \t Neu: 2000 us \n");
+  Serial.print("Normal: 1450 \n");
   
 } 
  
