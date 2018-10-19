@@ -13,17 +13,37 @@
  * 4. USB Host Shield 2.0 (Tested on 1.3.2)
  */
 #include "omni_robot_config.h"
+#include "zedcam_servo.h"
+//Include Library
+#include "robomodule_direct_lib.h"
+#include "due_can.h"
+//USB host sheild 2.0 library include
+#include <PS4BT.h>
+#include <usbhub.h>
+#ifdef dobogusinclude
+#include <spi4teensy3.h>
+#endif
+#include <SPI.h>
+USB Usb;
+//USBHub Hub1(&Usb); // Some dongles have a hub inside
+BTD Btd(&Usb); // You have to create the Bluetooth Dongle instance like so
+PS4BT PS4(&Btd);
+
+//Include due timer
+#include <DueTimer.h>
 //Global Variable, don't touch
 volatile int pwm_speed = MAX_PWM;
 int cur_speed = DEFAULT_RPM;
 //bool stop_flag = false;
-//Internal Use
+
+//Internal Motor Control Use
 int remap_vx = 0;
 int remap_vy = 0;
 int remap_wr = 0;
 int speed_adder = 0;
 int speed_adder_l2 = 0;
 int speed_adder_r2 = 0;
+
 //ps4 value
 int leftHatX = 0;
 int leftHatY = 0;
@@ -33,6 +53,11 @@ int r2ButVal = 0;
 volatile int motor1_speed = 0;
 volatile int motor2_speed = 0;
 volatile int motor3_speed = 0;
+
+//Zedcam servo platform use
+int zedcam_servo_H = 50;
+int zedcam_servo_V = 50;
+
 
 #ifdef CAL_LUT_MODE
 const int PRECISION_MULTIPYER = 1000;
@@ -82,7 +107,10 @@ void setup() {
   delay(500); 
   module_setSpeedMode(0x0); //Set speed mode to ALL module
   delay(500);
-  
+
+  servo_setup();
+  servoHcal(zedcam_servo_H);
+  servoVcal(zedcam_servo_V);
   
 #ifdef DEBUG_MODE
   Serial.print("Omni Wheel Robot Start\n");
@@ -93,8 +121,8 @@ void setup() {
   digitalWrite(LED_BUILTIN, LOW);
 
 //Setup Timer
-  Timer3.attachInterrupt(send_MotorData);
-  Timer3.start(1000); // Calls every 1ms
+  Timer1.attachInterrupt(send_MotorData);
+  Timer1.start(1000); // Calls every 1ms
 
 #ifdef CAL_LUT_MODE
   compute_lut();
@@ -179,7 +207,7 @@ void loop()
         cur_speed -= SPEED_CHANGE_INV;
     }
     if(PS4.getButtonClick(TOUCHPAD))
-      cur_speed = DEFAULT_RPM;    
+      cur_speed = DEFAULT_RPM; //Reset speed   
     //5. PS4 Exit State
     if (PS4.getButtonClick(PS)) 
       PS4.disconnect();
@@ -189,7 +217,31 @@ void loop()
     }
     if (PS4.getButtonClick(SQUARE)) {
         PS4.setLedFlash(0, 0); // Turn off blinking
-      }
+     }
+
+     //Control Servo motor
+     if (PS4.getButtonClick(UP)) {
+        //camera going up
+        zedcam_servo_V = zedcam_servo_V+servo_movestep <= 100 ? zedcam_servo_V+servo_movestep : 100;
+     } 
+     if (PS4.getButtonClick(DOWN)) {
+        //camera going down
+        zedcam_servo_V = zedcam_servo_V-servo_movestep >= 0 ? zedcam_servo_V-servo_movestep : 0;        
+     } 
+     if (PS4.getButtonClick(LEFT)) {
+        //camera going right
+        zedcam_servo_H = zedcam_servo_H+servo_movestep <= 100 ? zedcam_servo_H+servo_movestep : 100;
+     } 
+     if (PS4.getButtonClick(RIGHT)) {
+        //camera going left
+        zedcam_servo_H = zedcam_servo_H-servo_movestep >= 0 ? zedcam_servo_H-servo_movestep : 0;
+     }
+      
+     if (PS4.getButtonClick(SHARE)){
+       //Reset position
+       zedcam_servo_V = 50;
+       zedcam_servo_H = 50;
+     }
   }//END-2
 
   
@@ -218,7 +270,14 @@ void loop()
 #endif
     interrupts();
   }//END-3
+
+  //4. Handle Servo Motor movement
+  servoHcal(zedcam_servo_H);
+  servoVcal(zedcam_servo_V);
+
+
   
+  //Debug trace
 #ifdef DEBUG_MODE
   Serial3.print("vx: ");
   Serial3.println(remap_vx);
@@ -234,10 +293,5 @@ void loop()
   Serial3.println(motor3_speed);
   Serial3.println(" ");
 #endif
-  //Send the motor signal, in polling
-//  motor1_setSpeed(pwm_speed, motor1_speed);
-//  motor2_setSpeed(pwm_speed, motor2_speed);
-//  motor3_setSpeed(pwm_speed, motor3_speed);
-//  delay(1);// delay aleas 1 ms
-}//END-loop
 
+}//END-loop

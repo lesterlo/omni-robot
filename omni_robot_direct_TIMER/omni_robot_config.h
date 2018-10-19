@@ -53,27 +53,25 @@ const int SPEED_ACCEL_INV = 2;
 //Pin Define
 const int CANBUS_ENABLE_PIN = 23;
 
+
+//Servo pin
+const int servoHPin = 5;
+const int servoVPin = 6;
+const int servo_movestep = 10;
+// Horzontal calibration value
+
+#define Hmin 50
+#define Hmid 114
+#define Hmax 190
+
+#define Vmin 120
+#define Vmid 150
+#define Vmax 180
+
+
 //Marco Function
 #define TO_RAD(IN_DEGREE) (IN_DEGREE*(PI/180))
 //#define WHEEL_DIAMETER 0.25
 //#define MS2RPM(IN_SPEED) (int)((IN_SPEED*60/(2*PI*WHEEL_DIAMETER))*10) //Multiplier
-
-//Include Library
-#include "robomodule_direct_lib.h"
-#include "due_can.h"
-//USB host sheild 2.0 library include
-#include <PS4BT.h>
-#include <usbhub.h>
-#ifdef dobogusinclude
-#include <spi4teensy3.h>
-#endif
-#include <SPI.h>
-USB Usb;
-//USBHub Hub1(&Usb); // Some dongles have a hub inside
-BTD Btd(&Usb); // You have to create the Bluetooth Dongle instance like so
-PS4BT PS4(&Btd);
-
-//Include due timer
-#include <DueTimer.h>
 
 #endif
