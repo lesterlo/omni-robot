@@ -44,7 +44,7 @@ const int MOTOR3_DEGREE = 240+ROBOT_FRONT_VECTOR;
 //const int MOTOR_SPEED_DIVIDER = 1; //Reduct the Y-axis speed
 
 const int MAX_PWM = 5000; //Set The max pwm rate, usually 5000
-const int MAX_RPM = 4000; //Set the wheel max rpm rate
+const int MAX_RPM = 1500; //Set the wheel max rpm rate
 const int MIN_RPM = 50;
 const int DEFAULT_RPM = 500;
 const int SPEED_CHANGE_INV = 150;
